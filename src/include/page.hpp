@@ -103,7 +103,7 @@ std::string Page::timestamp(bsoncxx::types::b_date date) {
   auto ms = date.value;
   auto timePoint = std::chrono::system_clock::time_point(ms);
   auto timeT = std::chrono::system_clock::to_time_t(timePoint);
-  char buffer[32];
+  char buffer[40];
   std::strftime(buffer, sizeof(buffer), "%a, %B %d, %Y at %I:%M %p UTC",
                 std::gmtime(&timeT));
   return buffer;
