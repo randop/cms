@@ -58,7 +58,7 @@ RUN echo "Configuring nonroot account..." && \
 
 # Copy compiled C++ service and healthcheck script from builder
 WORKDIR /app
-COPY --from=builder --chown=nonroot:nonroot /app/build/blog /app/
+COPY --from=builder --chown=nonroot:nonroot /app/build/cms /app/
 
 # Set ownership for app directory
 RUN echo "Setting application directory permissions..." && \
@@ -69,4 +69,4 @@ USER nonroot
 
 EXPOSE 10000
 
-CMD ["/app/blog"]
+CMD ["/app/cms"]
