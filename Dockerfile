@@ -1,3 +1,5 @@
+# Cross-platform docker image builder
+
 # Build stage: Use pre-built Boost C++ image
 FROM rfledesma/boost:latest AS builder
 
@@ -38,7 +40,6 @@ ENV LD_LIBRARY_PATH=/usr/local/lib
 # Install runtime dependencies
 RUN echo "Installing runtime packages..." && \
     apt update && apt install -y --no-install-recommends \
-    libpq5 \
     openssl \
     ca-certificates \
     libmongoc-1.0-0 \
