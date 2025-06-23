@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Deploy-Render:
+  release:
     runs-on: ubuntu-latest
     steps:
       # Downloads the Render CLI binary and adds it to the PATH.
