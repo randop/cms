@@ -30,7 +30,7 @@ Originated from [https://gitlab.com/randop/applications/](https://gitlab.com/ran
 1. `libmongoc` and `libbson`
 ```bash
 sudo mkdir -p /opt/mongo-c-driver/current
-sudo git clone -b v2.0.2 --depth 1 https://github.com/mongodb/mongo-c-driver.git /opt/mongo-c-driver/2.0.2
+sudo git clone -b 2.0.2 --depth 1 https://github.com/mongodb/mongo-c-driver.git /opt/mongo-c-driver/2.0.2
 sudo cd /opt/mongo-c-driver/2.0.2 && cmake -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current .
 sudo cd /opt/mongo-c-driver/2.0.2 && make all install
 sudo echo "/opt/mongo-c-driver/current" > /etc/ld.so.conf.d/boost.conf
