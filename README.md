@@ -3,6 +3,7 @@ Content management server project written in C++ with MongoDB
 
 <p>
   <img src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <img src="https://img.shields.io/badge/STD-C%2B%2B20-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/randop/cms">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" target="_blank" />
   </a>
