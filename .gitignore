@@ -146,3 +146,6 @@ dist
 
 # PNPM
 .pnpm-store/
+
+# Meson
+subprojects/packagecache
