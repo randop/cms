@@ -10,8 +10,3 @@ cd /tmp/mongo-c-driver/2.0.2 && cmake -DCMAKE_INSTALL_PREFIX=/tmp/mongo-c-driver
 cd /tmp/mongo-c-driver/2.0.2 && make all install
 
 export LD_LIBRARY_PATH=/usr/local/lib:/tmp/mongo-c-driver/current/lib
-
-echo "Changing working directory" && cd ..
-
-echo "Configuring build..." && meson setup build --prefer-static --default-library=static
-echo "Compiling application..." && meson compile -C build
