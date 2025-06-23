@@ -1,6 +1,13 @@
 # CMS
 Content management server project written in C++ with MongoDB
 
+<p>
+  <img src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://github.com/randop/cms">
+    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" target="_blank" />
+  </a>
+</p>
+
 >  Copyright © 2010 — 2025 Randolph Ledesma
 >
 > Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +22,8 @@ Content management server project written in C++ with MongoDB
 > See the License for the specific language governing permissions and
 > limitations under the License.
 >
+
+Originated from [https://gitlab.com/randop/applications/](https://gitlab.com/randop/applications/)
 
 Copyright © 2010 — 2025 [Randolph Ledesma](https://github.com/randop).
 
