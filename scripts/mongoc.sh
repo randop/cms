@@ -10,3 +10,7 @@ cd /tmp/mongo-c-driver/2.0.2 && cmake -DCMAKE_INSTALL_PREFIX=/tmp/mongo-c-driver
 cd /tmp/mongo-c-driver/2.0.2 && make all install
 
 export LD_LIBRARY_PATH=/usr/local/lib:/tmp/mongo-c-driver/current/lib
+
+echo "/tmp/mongo-c-driver/current" | sudo tee -a /etc/ld.so.conf.d/mongo.conf > /dev/null
+
+sudo ldconfig
