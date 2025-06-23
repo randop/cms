@@ -1,4 +1,6 @@
 name: CD
+
+# Run this workflow when compile is successful
 on:
   workflow_dispatch:
 
