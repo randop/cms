@@ -1,0 +1,21 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./scripts
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Make script executable
+        run: chmod +x mongoc.sh
+      - name: Run script
+        run: ./mongoc.sh
