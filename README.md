@@ -37,6 +37,21 @@ sudo echo "/opt/mongo-c-driver/current" > /etc/ld.so.conf.d/boost.conf
 sudo ldconfig
 ```
 
+## Development
+> 1.) Boot the development mongo database
+```bash
+docker compose up --renew-anon-volumes
+```
+> 2.) Configure the Build
+```bash
+export LD_LIBRARY_PATH=/usr/local/lib:/opt/boost/current/lib:/opt/mongo-c-driver/current/lib
+meson setup build --prefer-static --default-library=static
+```
+> 3.) Compile
+```bash
+meson compile -C build
+```
+
 Copyright © 2010 — 2025 [Randolph Ledesma](https://github.com/randop).
 
 Last updated on 2025-06-23T11:02:07.000Z UTC
