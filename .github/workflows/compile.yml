@@ -29,6 +29,3 @@ jobs:
     steps:
       - name: Call deploy workflow
         uses: ./.github/workflows/deploy.yml
-        secrets:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
