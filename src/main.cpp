@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  spdlog::info("Blog server project: {} (build: {})", PROJECT_VERSION,
+  spdlog::info("CMS project: {} (build: {})", PROJECT_VERSION,
                PROJECT_BUILD);
   Environment::logOSinfo();
 

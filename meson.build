@@ -1,5 +1,5 @@
 project(
-  'blog',
+  'cms',
   'cpp',
   version: run_command('cat', 'VERSION', check: true).stdout().strip(),
   default_options: [
@@ -107,7 +107,7 @@ endif
 sources = ['src/main.cpp']
 
 executable(
-  'blog',
+  'cms',
   sources,
   dependencies: [
     cmark_dep,
