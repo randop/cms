@@ -87,26 +87,12 @@ public:
 
 private:
   std::shared_ptr<mongocxx::pool> pool;
-  std::string timestamp(bsoncxx::types::b_date date);
 };
 
 Page::Page(std::shared_ptr<mongocxx::pool> dbPool) : pool(dbPool) {
   if (!pool) {
     throw std::invalid_argument("Invalid or null mongodb pool");
   }
-}
-
-// Format bsoncxx::types::b_date to string like "Thu, June 12, 2025 at 10:33 AM
-// UTC"
-std::string Page::timestamp(bsoncxx::types::b_date date) {
-  // Convert milliseconds since epoch to time_point
-  auto ms = date.value;
-  auto timePoint = std::chrono::system_clock::time_point(ms);
-  auto timeT = std::chrono::system_clock::to_time_t(timePoint);
-  char buffer[40];
-  std::strftime(buffer, sizeof(buffer), "%a, %B %d, %Y at %I:%M %p UTC",
-                std::gmtime(&timeT));
-  return buffer;
 }
 
 std::string Page::getPage(const std::string_view &host,
@@ -164,7 +150,7 @@ std::string Page::getPage(const std::string_view &host,
         page.append("<h1>");
         page.append(titleValue.data(), titleValue.size());
         page.append("</h1><h4>");
-        page.append(timestamp(createdAt));
+        page.append(string_util::timestamp(createdAt));
         page.append("</h4>");
         page.append(html.get());
       } else if (modeId == MODE_HTML) {

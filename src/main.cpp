@@ -62,8 +62,7 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  spdlog::info("CMS project: {} (build: {})", PROJECT_VERSION,
-               PROJECT_BUILD);
+  spdlog::info("CMS project: {} (build: {})", PROJECT_VERSION, PROJECT_BUILD);
   Environment::logOSinfo();
 
   auto docRoot = std::make_shared<std::string>("/var/www/html");

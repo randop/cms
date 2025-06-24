@@ -167,8 +167,7 @@ handle_request(std::shared_ptr<blog::Post> post,
 
   // Returns html response
   auto const html_response = [&req](std::string &response) {
-    http::response<http::string_body> res{http::status::internal_server_error,
-                                          req.version()};
+    http::response<http::string_body> res{http::status::ok, req.version()};
     res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
     res.set(http::field::content_type, CONTENT_TYPE_HTML);
     res.keep_alive(req.keep_alive());

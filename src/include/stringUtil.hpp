@@ -4,6 +4,7 @@
 #define BLOG_STRING_UTIL_HPP
 
 #include <cerrno>
+#include <chrono>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -136,6 +137,20 @@ void StringReplacer::performReplacement(std::string_view input,
   if (inputPos < input.size()) {
     std::copy(input.begin() + inputPos, input.end(), output + outputPos);
   }
+}
+
+/**
+ * Format bsoncxx::types::b_date to human friendly
+ * ex: Thu, June 12, 2025 at 10:33 AM UTC
+ */
+std::string timestamp(bsoncxx::types::b_date date) {
+  // Convert milliseconds since epoch to time_point
+  auto timePoint = std::chrono::system_clock::time_point(date.value);
+  auto timeT = std::chrono::system_clock::to_time_t(timePoint);
+  char buffer[40];
+  std::strftime(buffer, sizeof(buffer), "%a, %B %d, %Y at %I:%M %p UTC",
+                std::gmtime(&timeT));
+  return buffer;
 }
 
 } // namespace string_util
