@@ -35,6 +35,7 @@
 #include <vector>
 
 #include "include/stringUtil.hpp"
+#include "keyValueCache.hpp"
 
 /***
 ###############################################################################
@@ -76,7 +77,8 @@ constexpr bsoncxx::stdx::string_view kCreatedAtField{"createdAt"};
 class Page {
 public:
   // Constructor taking a shared_ptr to mongodb uri
-  explicit Page(std::shared_ptr<mongocxx::pool> dbPool);
+  explicit Page(std::shared_ptr<mongocxx::pool> dbPool,
+                services::KeyValueCache &cacheRef);
 
   // Default destructor
   ~Page() = default;
@@ -87,9 +89,12 @@ public:
 
 private:
   std::shared_ptr<mongocxx::pool> pool;
+  services::KeyValueCache &cache;
 };
 
-Page::Page(std::shared_ptr<mongocxx::pool> dbPool) : pool(dbPool) {
+Page::Page(std::shared_ptr<mongocxx::pool> dbPool,
+           services::KeyValueCache &cacheRef)
+    : pool(dbPool), cache(cacheRef) {
   if (!pool) {
     throw std::invalid_argument("Invalid or null mongodb pool");
   }
@@ -98,6 +103,14 @@ Page::Page(std::shared_ptr<mongocxx::pool> dbPool) : pool(dbPool) {
 std::string Page::getPage(const std::string_view &host,
                           const bsoncxx::stdx::string_view &dbName,
                           const std::string &pageId) {
+  std::string cacheKey{dbName};
+  cacheKey.append("_page_");
+  cacheKey.append(pageId);
+
+  if (auto cacheValue = cache.get(cacheKey)) {
+    return cacheValue.value();
+  }
+
   std::string page;
   std::string titleTag;
 
@@ -176,7 +189,15 @@ std::string Page::getPage(const std::string_view &host,
 
   string_util::StringReplacer replacer("<title>%REPLACE_WITH_TITLE_ID%</title>",
                                        titleTag);
-  return replacer.replace(page, 1);
+  std::string resultPage = replacer.replace(page, 1);
+
+  int64_t ttl = 900; // 15 minutes TTL.
+  if (cache.set(cacheKey, resultPage, ttl)) {
+    spdlog::info("get page ({}) set cache ({})", pageId, cacheKey);
+  } else {
+    spdlog::error("get page ({}) failed to set cache ({})", pageId, cacheKey);
+  }
+  return resultPage;
 }
 
 } // namespace blog

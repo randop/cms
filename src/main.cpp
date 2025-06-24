@@ -74,6 +74,9 @@ int main(int argc, char *argv[]) {
                  docRoot->c_str());
   }
 
+  constexpr size_t cacheSize = 25;
+  services::KeyValueCache cache(cacheSize);
+
   std::string mongoDbUrl = "mongodb+srv://user:password@host/"
                            "?retryWrites=true&w=majority&appName=app";
   if (auto envMongoDbUrl = Environment::getVariable("MONGODB_URL")) {
@@ -118,8 +121,8 @@ int main(int argc, char *argv[]) {
   auto const port = static_cast<unsigned short>(DEFAULT_PORT);
   auto const threadCount = std::max<int>(1, 4);
 
+  auto page = std::make_shared<blog::Page>(mongoDbPool, std::ref(cache));
   auto post = std::make_shared<blog::Post>(mongoDbPool);
-  auto page = std::make_shared<blog::Page>(mongoDbPool);
 
   // The io_context is required for all I/O
   net::io_context ioc{threadCount};
