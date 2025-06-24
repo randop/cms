@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef CMS_CONSTANTS_HPP
-#define CMS_CONSTANTS_HPP
+#ifndef CMS_KEYVALUECACHE_HPP
+#define CMS_KEYVALUECACHE_HPP
 
 #include <chrono>
 #include <mutex>
@@ -145,4 +145,4 @@ private:
 
 } // namespace services
 
-#endif // CMS_CONSTANTS_HPP
+#endif // CMS_KEYVALUECACHE_HPP

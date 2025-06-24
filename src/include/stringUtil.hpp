@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef BLOG_STRING_UTIL_HPP
-#define BLOG_STRING_UTIL_HPP
+#ifndef CMS_STRING_UTIL_HPP
+#define CMS_STRING_UTIL_HPP
 
 #include <cerrno>
 #include <chrono>
@@ -155,4 +155,4 @@ std::string timestamp(bsoncxx::types::b_date date) {
 
 } // namespace string_util
 
-#endif // BLOG_STRING_UTIL_HPP
+#endif // CMS_STRING_UTIL_HPP

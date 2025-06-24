@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef BLOG_ENVIRONMENT_HPP
-#define BLOG_ENVIRONMENT_HPP
+#ifndef CMS_ENVIRONMENT_HPP
+#define CMS_ENVIRONMENT_HPP
 
 #include <cerrno>
 #include <cstdlib>
@@ -129,4 +129,4 @@ void Environment::logOSinfo() {
   getProcessorInfo();
 }
 
-#endif // BLOG_ENVIRONMENT_HPP
+#endif // CMS_ENVIRONMENT_HPP

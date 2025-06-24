@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef BLOG_POST_H
-#define BLOG_POST_H
+#ifndef CMS_POST_HPP
+#define CMS_POST_HPP
 
 /***
 ###############################################################################
@@ -164,4 +164,4 @@ std::string Post::getPost(int postId) {
 
 } // namespace blog
 
-#endif // BLOG_POST_H
+#endif // CMS_POST_HPP

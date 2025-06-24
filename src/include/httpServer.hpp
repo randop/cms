@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef BLOG_HTTP_SERVER_H
-#define BLOG_HTTP_SERVER_H
+#ifndef CMS_HTTP_SERVER_HPP
+#define CMS_HTTP_SERVER_HPP
 
 /***
 ###############################################################################
@@ -481,4 +481,4 @@ private:
 #include <boost/asio/unyield.hpp>
 };
 
-#endif // BLOG_HTTP_SERVER_H
+#endif // CMS_HTTP_SERVER_HPP

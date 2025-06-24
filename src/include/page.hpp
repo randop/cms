@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef BLOG_PAGE_H
-#define BLOG_PAGE_H
+#ifndef CMS_PAGE_HPP
+#define CMS_PAGE_HPP
 
 /***
 ###############################################################################
@@ -202,4 +202,4 @@ std::string Page::getPage(const std::string_view &host,
 
 } // namespace blog
 
-#endif // BLOG_PAGE_H
+#endif // CMS_PAGE_HPP
