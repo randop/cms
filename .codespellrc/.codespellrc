@@ -1,0 +1,4 @@
+[codespell]
+quiet-level = 2
+skip = ./cache,subprojects,./.git,./build,./kdev4
+ignore-words = ./.codespellrc/wordlist.txt
