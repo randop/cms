@@ -19,6 +19,9 @@
 # limitations under the License.
 #
 
+# Clears meson build cache to avoid compile failure for docker
+rm -rf build
+
 docker buildx build \
     --platform linux/amd64 \
     -t rfledesma/blog:$(cat VERSION | xargs) \

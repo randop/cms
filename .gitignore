@@ -152,3 +152,11 @@ subprojects/packagecache
 
 # Jetbrains
 .idea
+
+# CMake generated files and directories
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+compile_commands.json
+Makefile

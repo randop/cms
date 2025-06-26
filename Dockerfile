@@ -22,6 +22,11 @@ RUN echo "Compiling mongodb c driver.." && \
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/opt/mongo-c-driver/current/lib
 
+RUN echo "Patching mongocxx-driver build..." && \
+    mkdir -p /app/subprojects/mongo-cxx-driver/build && \
+    echo "4.1.0" > /app/subprojects/mongo-cxx-driver/build/VERSION_CURRENT && \
+    echo "4.1.0" > /app/subprojects/mongo-cxx-driver/VERSION_CURRENT
+
 RUN echo "Configuring build..." && \
     meson setup build --prefer-static --default-library=static
 
