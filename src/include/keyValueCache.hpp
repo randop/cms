@@ -17,15 +17,16 @@
 
 namespace services {
 
+using Clock = std::chrono::steady_clock;
+using TimePoint = Clock::time_point;
+using Duration = Clock::duration;
+using string = std::string;
+
 class KeyValueCache {
 public:
-  using Clock = std::chrono::steady_clock;
-  using TimePoint = Clock::time_point;
-  using Duration = Clock::duration;
-
   struct KeyValue {
-    std::string key;
-    std::string value;
+    string key;
+    string value;
     TimePoint expiry;
     bool isExpired() const { return Clock::now() >= expiry; }
   };
@@ -34,8 +35,7 @@ public:
       : buffer(capacity), capacity(capacity) {}
 
   // Set a key-value pair with TTL (seconds); returns false if buffer is full.
-  bool set(const std::string &key, const std::string &value,
-           int64_t ttlSeconds) {
+  bool set(const string &key, const string &value, int64_t ttlSeconds) {
     std::lock_guard<std::mutex> lock(mutex);
     if (sizeCount == capacity) {
       // Try to evict expired items.
@@ -65,7 +65,7 @@ public:
   }
 
   // Get a value by key; returns empty optional if not found or expired.
-  std::optional<std::string> get(const std::string &key) {
+  std::optional<string> get(const string &key) {
     std::lock_guard<std::mutex> lock(mutex);
     for (size_t i = 0; i < sizeCount; ++i) {
       size_t index = (head + i) % capacity;
@@ -82,7 +82,7 @@ public:
   }
 
   // Remove a key; returns true if key was found and removed.
-  bool remove(const std::string &key) {
+  bool remove(const string &key) {
     std::lock_guard<std::mutex> lock(mutex);
     for (size_t i = 0; i < sizeCount; ++i) {
       size_t index = (head + i) % capacity;

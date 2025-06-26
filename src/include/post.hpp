@@ -30,7 +30,7 @@
 ***/
 #include "include/constants.h"
 
-namespace blog {
+namespace cms {
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
@@ -43,6 +43,8 @@ using bsoncxx::builder::stream::open_document;
 namespace pt = boost::posix_time;
 namespace gr = boost::gregorian;
 
+using string = std::string;
+
 class Post {
 public:
   // Constructor taking a shared_ptr to ConnectionPool
@@ -51,9 +53,9 @@ public:
   // Default destructor
   ~Post() = default;
 
-  std::string timestamp(const std::string &timeStamp);
-  std::string titlePlaceholder(std::string content, const char *newTitle) const;
-  std::string getPost(int postId);
+  string timestamp(const string &timeStamp);
+  string titlePlaceholder(string content, const char *newTitle) const;
+  string getPost(int postId);
 
 private:
   std::shared_ptr<mongocxx::pool> pool;
@@ -65,11 +67,11 @@ Post::Post(std::shared_ptr<mongocxx::pool> dbPool) : pool(dbPool) {
   }
 }
 
-std::string Post::timestamp(const std::string &inputTimestamp) {
+string Post::timestamp(const string &inputTimestamp) {
   try {
     // Split timestamp into date and time parts.
-    std::string datePart;
-    std::string timePart;
+    string datePart;
+    string timePart;
     std::stringstream inputStream(inputTimestamp);
     std::getline(inputStream, datePart, ' ');
     std::getline(inputStream, timePart);
@@ -106,21 +108,20 @@ std::string Post::timestamp(const std::string &inputTimestamp) {
   return inputTimestamp;
 }
 
-std::string Post::titlePlaceholder(std::string content,
-                                   const char *newTitle) const {
-  const std::string placeholder = "<title>%REPLACE_WITH_TITLE_ID%</title>";
-  std::string::size_type pos = content.find(placeholder);
-  std::string title = "<title>";
+string Post::titlePlaceholder(string content, const char *newTitle) const {
+  const string placeholder = "<title>%REPLACE_WITH_TITLE_ID%</title>";
+  string::size_type pos = content.find(placeholder);
+  string title = "<title>";
   title.append(newTitle);
   title.append("</title>");
-  if (pos != std::string::npos) {
+  if (pos != string::npos) {
     content.replace(pos, placeholder.length(), title);
   }
   return content;
 }
 
-std::string Post::getPost(int postId) {
-  std::string post;
+string Post::getPost(int postId) {
+  string post;
   try {
     /*
     auto conn = pool->getConnection();
@@ -162,6 +163,6 @@ std::string Post::getPost(int postId) {
   return post;
 }
 
-} // namespace blog
+} // namespace cms
 
 #endif // CMS_POST_HPP

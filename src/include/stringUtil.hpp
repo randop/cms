@@ -20,32 +20,35 @@
 
 namespace string_util {
 
+using string_view = std::string_view;
+using string = std::string;
+
 class StringReplacer {
 public:
-  StringReplacer(std::string_view needle, std::string_view replacement);
+  StringReplacer(string_view needle, string_view replacement);
   ~StringReplacer() = default;
 
   // Thread-safe string replacement.
   // Returns new string with up to maxReplacements occurrences of needle
   // replaced. If maxReplacements is 0, all occurrences are replaced.
-  std::string replace(std::string_view input, size_t maxReplacements = 0) const;
+  string replace(string_view input, size_t maxReplacements = 0) const;
 
 private:
   // Find match positions in the input string, up to maxReplacements.
-  void findMatches(std::string_view input, std::vector<size_t> &positions,
+  void findMatches(string_view input, std::vector<size_t> &positions,
                    size_t maxReplacements) const;
 
   // Calculate output buffer size based on matches.
-  size_t calculateOutputSize(std::string_view input,
+  size_t calculateOutputSize(string_view input,
                              const std::vector<size_t> &positions) const;
 
   // Perform actual replacement into output buffer.
-  void performReplacement(std::string_view input,
+  void performReplacement(string_view input,
                           const std::vector<size_t> &positions,
                           char *output) const;
 
-  const std::string needle_;
-  const std::string replacement_;
+  const string needle_;
+  const string replacement_;
 };
 
 /**
@@ -55,17 +58,16 @@ private:
    // result = "This is new text with new values"
  **/
 
-StringReplacer::StringReplacer(std::string_view needle,
-                               std::string_view replacement)
+StringReplacer::StringReplacer(string_view needle, string_view replacement)
     : needle_(needle), replacement_(replacement) {
   assert(!needle.empty() && "Needle cannot be empty");
 }
 
-std::string StringReplacer::replace(std::string_view input,
-                                    size_t maxReplacements) const {
+string StringReplacer::replace(string_view input,
+                               size_t maxReplacements) const {
   // Early exit for empty input or no possible matches
   if (input.empty() || input.size() < needle_.size()) {
-    return std::string(input);
+    return string(input);
   }
 
   // Find match positions
@@ -74,12 +76,12 @@ std::string StringReplacer::replace(std::string_view input,
 
   // No matches found
   if (positions.empty()) {
-    return std::string(input);
+    return string(input);
   }
 
   // Allocate exact output buffer size
   size_t outputSize = calculateOutputSize(input, positions);
-  std::string result;
+  string result;
   result.resize(outputSize);
 
   // Perform replacement
@@ -87,14 +89,14 @@ std::string StringReplacer::replace(std::string_view input,
   return result;
 }
 
-void StringReplacer::findMatches(std::string_view input,
+void StringReplacer::findMatches(string_view input,
                                  std::vector<size_t> &positions,
                                  size_t maxReplacements) const {
   size_t pos = 0;
   size_t count = 0;
   while (pos <= input.size() - needle_.size()) {
     auto found = input.find(needle_, pos);
-    if (found == std::string_view::npos) {
+    if (found == string_view::npos) {
       break;
     }
     positions.push_back(found);
@@ -107,12 +109,12 @@ void StringReplacer::findMatches(std::string_view input,
 }
 
 size_t StringReplacer::calculateOutputSize(
-    std::string_view input, const std::vector<size_t> &positions) const {
+    string_view input, const std::vector<size_t> &positions) const {
   return input.size() +
          positions.size() * (replacement_.size() - needle_.size());
 }
 
-void StringReplacer::performReplacement(std::string_view input,
+void StringReplacer::performReplacement(string_view input,
                                         const std::vector<size_t> &positions,
                                         char *output) const {
   size_t inputPos = 0;
@@ -143,7 +145,7 @@ void StringReplacer::performReplacement(std::string_view input,
  * Format bsoncxx::types::b_date to human friendly
  * ex: Thu, June 12, 2025 at 10:33 AM UTC
  */
-std::string timestamp(bsoncxx::types::b_date date) {
+string timestamp(bsoncxx::types::b_date date) {
   // Convert milliseconds since epoch to time_point
   auto timePoint = std::chrono::system_clock::time_point(date.value);
   auto timeT = std::chrono::system_clock::to_time_t(timePoint);

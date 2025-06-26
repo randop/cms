@@ -126,8 +126,8 @@ std::string path_cat(beast::string_view base, beast::string_view path) {
 // request), is type-erased in message_generator.
 template <class Body, class Allocator>
 http::message_generator
-handle_request(std::shared_ptr<blog::Post> post,
-               std::shared_ptr<blog::Page> page, beast::string_view doc_root,
+handle_request(std::shared_ptr<cms::Post> post, std::shared_ptr<cms::Page> page,
+               beast::string_view doc_root,
                http::request<Body, http::basic_fields<Allocator>> &&req) {
   // Returns a bad request response
   auto const bad_request = [&req](beast::string_view why) {
@@ -320,15 +320,15 @@ class session : public boost::asio::coroutine,
   std::shared_ptr<std::string const> doc_root_;
   http::request<http::string_body> req_;
   bool keep_alive_ = true;
-  std::shared_ptr<blog::Post> post;
-  std::shared_ptr<blog::Page> page;
+  std::shared_ptr<cms::Post> post;
+  std::shared_ptr<cms::Page> page;
 
 public:
   // Take ownership of the socket
   explicit session(tcp::socket &&socket,
                    std::shared_ptr<std::string const> const &doc_root,
-                   std::shared_ptr<blog::Post> blogPost,
-                   std::shared_ptr<blog::Page> blogPage)
+                   std::shared_ptr<cms::Post> blogPost,
+                   std::shared_ptr<cms::Page> blogPage)
       : stream_(std::move(socket)), doc_root_(doc_root), post(blogPost),
         page(blogPage) {}
 
@@ -410,14 +410,14 @@ class listener : public boost::asio::coroutine,
   tcp::acceptor acceptor_;
   tcp::socket socket_;
   std::shared_ptr<std::string const> doc_root_;
-  std::shared_ptr<blog::Post> post;
-  std::shared_ptr<blog::Page> page;
+  std::shared_ptr<cms::Post> post;
+  std::shared_ptr<cms::Page> page;
 
 public:
   listener(net::io_context &ioc, tcp::endpoint endpoint,
            std::shared_ptr<std::string const> const &doc_root,
-           std::shared_ptr<blog::Post> blogPost,
-           std::shared_ptr<blog::Page> blogPage)
+           std::shared_ptr<cms::Post> blogPost,
+           std::shared_ptr<cms::Page> blogPage)
       : ioc_(ioc), acceptor_(net::make_strand(ioc)),
         socket_(net::make_strand(ioc)), doc_root_(doc_root), post(blogPost),
         page(blogPage) {

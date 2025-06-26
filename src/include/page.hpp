@@ -44,7 +44,7 @@
 ***/
 #include "include/constants.h"
 
-namespace blog {
+namespace cms {
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
@@ -74,6 +74,8 @@ constexpr bsoncxx::stdx::string_view kFooterField{"footer"};
 constexpr bsoncxx::stdx::string_view kLayoutField{"layout"};
 constexpr bsoncxx::stdx::string_view kCreatedAtField{"createdAt"};
 
+using string = std::string;
+
 class Page {
 public:
   // Constructor taking a shared_ptr to mongodb uri
@@ -83,9 +85,9 @@ public:
   // Default destructor
   ~Page() = default;
 
-  std::string getPage(const std::string_view &host,
-                      const bsoncxx::stdx::string_view &dbName,
-                      const std::string &pageId);
+  string getPage(const std::string_view &host,
+                 const bsoncxx::stdx::string_view &dbName,
+                 const string &pageId);
 
 private:
   std::shared_ptr<mongocxx::pool> pool;
@@ -100,10 +102,10 @@ Page::Page(std::shared_ptr<mongocxx::pool> dbPool,
   }
 }
 
-std::string Page::getPage(const std::string_view &host,
-                          const bsoncxx::stdx::string_view &dbName,
-                          const std::string &pageId) {
-  std::string cacheKey{dbName};
+string Page::getPage(const std::string_view &host,
+                     const bsoncxx::stdx::string_view &dbName,
+                     const string &pageId) {
+  string cacheKey{dbName};
   cacheKey.append("_page_");
   cacheKey.append(pageId);
 
@@ -111,8 +113,8 @@ std::string Page::getPage(const std::string_view &host,
     return cacheValue.value();
   }
 
-  std::string page;
-  std::string titleTag;
+  string page;
+  string titleTag;
 
   try {
     auto client = pool->acquire();
@@ -189,7 +191,7 @@ std::string Page::getPage(const std::string_view &host,
 
   string_util::StringReplacer replacer("<title>%REPLACE_WITH_TITLE_ID%</title>",
                                        titleTag);
-  std::string resultPage = replacer.replace(page, 1);
+  string resultPage = replacer.replace(page, 1);
 
   int64_t ttl = 900; // 15 minutes TTL.
   if (cache.set(cacheKey, resultPage, ttl)) {
@@ -200,6 +202,6 @@ std::string Page::getPage(const std::string_view &host,
   return resultPage;
 }
 
-} // namespace blog
+} // namespace cms
 
 #endif // CMS_PAGE_HPP

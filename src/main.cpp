@@ -64,10 +64,10 @@ int main(int argc, char *argv[]) {
   }
 
   spdlog::info("CMS project: {} (build: {})", PROJECT_VERSION, PROJECT_BUILD);
-  Environment::logOSinfo();
+  cms::Environment::logOSinfo();
 
   auto docRoot = std::make_shared<std::string>("/var/www/html");
-  if (auto envDocRoot = Environment::getVariable("DOC_ROOT")) {
+  if (auto envDocRoot = cms::Environment::getVariable("DOC_ROOT")) {
     docRoot = std::make_shared<std::string>(envDocRoot.value());
     spdlog::info("DOC_ROOT => {}", docRoot->c_str());
   } else {
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 
   std::string mongoDbUrl = "mongodb+srv://user:password@localhost/"
                            "?retryWrites=true&w=majority&appName=app";
-  if (auto envMongoDbUrl = Environment::getVariable("MONGODB_URL")) {
+  if (auto envMongoDbUrl = cms::Environment::getVariable("MONGODB_URL")) {
     spdlog::debug("MONGODB_URL => {}", envMongoDbUrl.value());
     mongoDbUrl = envMongoDbUrl.value();
   } else {
@@ -123,8 +123,8 @@ int main(int argc, char *argv[]) {
   auto const threadCount =
       std::max<int>(1, std::thread::hardware_concurrency());
 
-  auto page = std::make_shared<blog::Page>(mongoDbPool, std::ref(cache));
-  auto post = std::make_shared<blog::Post>(mongoDbPool);
+  auto page = std::make_shared<cms::Page>(mongoDbPool, std::ref(cache));
+  auto post = std::make_shared<cms::Post>(mongoDbPool);
 
   // The io_context is required for all I/O
   net::io_context ioc{threadCount};

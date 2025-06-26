@@ -17,28 +17,31 @@
 #include <boost/optional.hpp>
 #include <spdlog/spdlog.h>
 
+namespace cms {
+using string = std::string;
+
 class Environment {
 public:
   // Retrieves the value of the specified environment variable.
   // Returns boost::optional containing the value if found, or boost::none if
   // not set.
-  static boost::optional<std::string> getVariable(const std::string &name);
+  static boost::optional<string> getVariable(const string &name);
 
   static void logOSinfo();
 
 private:
-  static std::string formatBytes(uint64_t bytes);
+  static string formatBytes(uint64_t bytes);
   static void getProcessorInfo();
 };
 
-boost::optional<std::string> Environment::getVariable(const std::string &name) {
+boost::optional<string> Environment::getVariable(const string &name) {
   if (const char *value = std::getenv(name.c_str())) {
-    return std::string(value);
+    return string(value);
   }
   return boost::none;
 }
 
-std::string Environment::formatBytes(uint64_t bytes) {
+string Environment::formatBytes(uint64_t bytes) {
   const char *kUnits[] = {"B", "KB", "MB", "GB", "TB"};
   int unitIndex = 0;
   double size = static_cast<double>(bytes);
@@ -60,23 +63,23 @@ void Environment::getProcessorInfo() {
     return;
   }
 
-  std::string line;
-  std::string processorName;
+  string line;
+  string processorName;
   int threadCount = 0;
   int coreCount = -1; // Initialize to -1 to detect if not found.
-  std::unordered_set<std::string> physicalIds;
+  std::unordered_set<string> physicalIds;
 
   while (std::getline(cpuInfo, line)) {
-    if (processorName.empty() && line.find("model name") != std::string::npos) {
+    if (processorName.empty() && line.find("model name") != string::npos) {
       size_t pos = line.find(":");
-      if (pos != std::string::npos) {
+      if (pos != string::npos) {
         processorName = line.substr(pos + 2);
       }
-    } else if (line.find("processor") != std::string::npos) {
+    } else if (line.find("processor") != string::npos) {
       ++threadCount;
-    } else if (coreCount == -1 && line.find("cpu cores") != std::string::npos) {
+    } else if (coreCount == -1 && line.find("cpu cores") != string::npos) {
       size_t pos = line.find(":");
-      if (pos != std::string::npos) {
+      if (pos != string::npos) {
         try {
           coreCount =
               std::stoi(line.substr(pos + 2)); // Cores per physical CPU.
@@ -84,9 +87,9 @@ void Environment::getProcessorInfo() {
           coreCount = -1; // In case of parsing error.
         }
       }
-    } else if (line.find("physical id") != std::string::npos) {
+    } else if (line.find("physical id") != string::npos) {
       size_t pos = line.find(":");
-      if (pos != std::string::npos) {
+      if (pos != string::npos) {
         physicalIds.insert(line.substr(pos + 2));
       }
     }
@@ -128,5 +131,6 @@ void Environment::logOSinfo() {
 
   getProcessorInfo();
 }
+} // namespace cms
 
 #endif // CMS_ENVIRONMENT_HPP
