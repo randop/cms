@@ -17,6 +17,7 @@
 #include <iostream>
 #include <memory>
 #include <string_view>
+#include <thread>
 
 #include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
@@ -77,7 +78,7 @@ int main(int argc, char *argv[]) {
   constexpr size_t cacheSize = 25;
   services::KeyValueCache cache(cacheSize);
 
-  std::string mongoDbUrl = "mongodb+srv://user:password@host/"
+  std::string mongoDbUrl = "mongodb+srv://user:password@localhost/"
                            "?retryWrites=true&w=majority&appName=app";
   if (auto envMongoDbUrl = Environment::getVariable("MONGODB_URL")) {
     spdlog::debug("MONGODB_URL => {}", envMongoDbUrl.value());
@@ -119,7 +120,7 @@ int main(int argc, char *argv[]) {
   const char *host = ANY_IPV4_HOST;
   auto const address = net::ip::make_address(host);
   auto const port = static_cast<unsigned short>(DEFAULT_PORT);
-  auto const threadCount = std::max<int>(1, 4);
+  auto const threadCount = std::max<int>(1, std::thread::hardware_concurrency());
 
   auto page = std::make_shared<blog::Page>(mongoDbPool, std::ref(cache));
   auto post = std::make_shared<blog::Post>(mongoDbPool);
