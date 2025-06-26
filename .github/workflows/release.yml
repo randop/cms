@@ -4,6 +4,15 @@ name: RELEASE
 on:
   workflow_dispatch:
 
+# This ensures that no matter what triggers this workflow (a push, a manual trigger, etc.),
+# only one instance of it will ever run at a time across your entire repository.
+concurrency:
+  # Use the workflow's name as the unique lock.
+  # All runs of this workflow will share the same concurrency group.
+  group: ${{ github.workflow }}
+  # If a new run is triggered, wait for the existing one to finish.
+  cancel-in-progress: true
+
 # Downloads the Render CLI binary and adds it to the PATH.
 # To prevent breaking changes in CI/CD, we pin to a
 # specific CLI version (in this case 1.1.0).
