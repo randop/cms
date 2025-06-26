@@ -4,6 +4,7 @@
 #define CMS_STRING_UTIL_HPP
 
 #include <cerrno>
+#include <charconv>
 #include <chrono>
 #include <cstdlib>
 #include <cstring>
@@ -153,6 +154,24 @@ string timestamp(bsoncxx::types::b_date date) {
   std::strftime(buffer, sizeof(buffer), "%a, %B %d, %Y at %I:%M %p UTC",
                 std::gmtime(&timeT));
   return buffer;
+}
+
+class Converter {
+public:
+  Converter() = default;
+  ~Converter() = default;
+
+  static boost::optional<int> toNumber(const string &value);
+};
+
+boost::optional<int> Converter::toNumber(const string &value) {
+  int number = 0;
+  auto [ptr, ec] =
+      std::from_chars(value.data(), value.data() + value.size(), number);
+  if (ec == std::errc() && ptr == value.data() + value.size()) {
+    return number;
+  }
+  return boost::none;
 }
 
 } // namespace string_util

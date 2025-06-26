@@ -120,8 +120,16 @@ int main(int argc, char *argv[]) {
   const char *host = ANY_IPV4_HOST;
   auto const address = net::ip::make_address(host);
   auto const port = static_cast<unsigned short>(DEFAULT_PORT);
-  auto const threadCount =
-      std::max<int>(1, std::thread::hardware_concurrency());
+  int numThreads = std::thread::hardware_concurrency();
+  spdlog::info("Detected threads: {}", numThreads);
+  if (auto envThreads =
+          cms::Environment::getVariable("OVERRIDE_THREAD_COUNT")) {
+    spdlog::info("OVERRIDE_THREAD_COUNT => {}", envThreads.value());
+    if (auto threads = string_util::Converter::toNumber(envThreads.value())) {
+      numThreads = threads.value();
+    }
+  }
+  auto const threadCount = std::max<int>(1, numThreads);
 
   auto page = std::make_shared<cms::Page>(mongoDbPool, std::ref(cache));
   auto post = std::make_shared<cms::Post>(mongoDbPool);
