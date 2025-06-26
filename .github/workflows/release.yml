@@ -4,13 +4,20 @@ name: RELEASE
 on:
   workflow_dispatch:
 
+# Downloads the Render CLI binary and adds it to the PATH.
+# To prevent breaking changes in CI/CD, we pin to a
+# specific CLI version (in this case 1.1.0).
+
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      # Downloads the Render CLI binary and adds it to the PATH.
-      # To prevent breaking changes in CI/CD, we pin to a
-      # specific CLI version (in this case 1.1.0).
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Make script executable
+        run: chmod +x scripts/release.sh
+      - name: Install jq
+        run: sudo apt install -y jq
       - name: Install Render CLI
         run: |
           curl -L https://github.com/render-oss/cli/releases/download/v1.1.0/cli_1.1.0_linux_amd64.zip -o render.zip
@@ -20,6 +27,6 @@ jobs:
         env:
           # The CLI can authenticate via a Render API key without logging in.
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
           CI: true
-        run: |
-          render deploys create ${{ secrets.RENDER_SERVICE_ID }} --output json --confirm
+        run: ./scripts/release.sh
