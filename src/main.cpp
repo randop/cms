@@ -43,11 +43,17 @@ int main(int argc, char *argv[]) {
   try {
     po::options_description desc("Allowed options");
     desc.add_options()("help,h", "Produce help message")(
-        "version,v", "Print version information");
+        "debug,d", "Debug logging mode")("version,v",
+                                         "Print version information");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
+
+    if (vm.count("debug")) {
+      spdlog::set_level(spdlog::level::debug);
+      spdlog::debug("Debug mode: ON");
+    }
 
     if (vm.count("help")) {
       std::cout << desc << std::endl;
@@ -65,6 +71,14 @@ int main(int argc, char *argv[]) {
 
   spdlog::info("CMS project: {} (build: {})", PROJECT_VERSION, PROJECT_BUILD);
   cms::Environment::logOSinfo();
+
+  if (auto envDebug = cms::Environment::getVariable("CMS_DEBUG")) {
+    spdlog::info("DOC_ROOT => {}", envDebug.value());
+    if (envDebug.value() == "true") {
+      spdlog::set_level(spdlog::level::debug);
+      spdlog::debug("Debug mode: ON");
+    }
+  }
 
   auto docRoot = std::make_shared<std::string>("/var/www/html");
   if (auto envDocRoot = cms::Environment::getVariable("DOC_ROOT")) {
