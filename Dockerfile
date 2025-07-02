@@ -44,7 +44,7 @@ ENV LD_LIBRARY_PATH=/usr/local/lib
 
 # Install runtime dependencies
 RUN echo "Installing runtime packages..." && \
-    apt update && apt install -y --no-install-recommends \
+    apt update && apt install -y -qq --no-install-recommends \
     openssl \
     ca-certificates \
     libmongoc-1.0-0 \

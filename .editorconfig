@@ -26,5 +26,11 @@ indent_size = 2
 # Settings for shell scripts, based on Emacs/Vim modelines
 [*.{sh,bash,zsh}]
 indent_style = space
-indent_size = 4
-tab_width = 8
+indent_size = 2
+tab_width = 4
+
+# Settings for YAML configurations
+[*.{yml}]
+indent_style = space
+indent_size = 2
+tab_width = 4

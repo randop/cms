@@ -25,10 +25,10 @@ RETRY=1
 MAX_RETRIES=3
 MAX_ATTEMPTS=5
 SLEEP_INTERVAL=15
-ATTEMPT=1
 DEPLOY_ID=0
 
 while [ $RETRY -le $MAX_RETRIES ]; do
+  ATTEMPT=1
   echo "Deploying (Attempt $RETRY/$MAX_RETRIES)..."
   DEPLOY_RESPONSE=$(render deploys create ${RENDER_SERVICE_ID} --output json --confirm)
   echo "$DEPLOY_RESPONSE"
