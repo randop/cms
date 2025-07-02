@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
   cms::Environment::logOSinfo();
 
   if (auto envDebug = cms::Environment::getVariable("CMS_DEBUG")) {
-    spdlog::info("DOC_ROOT => {}", envDebug.value());
+    spdlog::info("CMS_DEBUG => {}", envDebug.value());
     if (envDebug.value() == "true") {
       spdlog::set_level(spdlog::level::debug);
       spdlog::debug("Debug mode: ON");
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
   auto const address = net::ip::make_address(host);
   auto const port = static_cast<unsigned short>(DEFAULT_PORT);
   int numThreads = std::thread::hardware_concurrency();
-  spdlog::info("Detected threads: {}", numThreads);
+  spdlog::debug("Detected threads: {}", numThreads);
   if (auto envThreads =
           cms::Environment::getVariable("OVERRIDE_THREAD_COUNT")) {
     spdlog::info("OVERRIDE_THREAD_COUNT => {}", envThreads.value());

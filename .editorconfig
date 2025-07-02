@@ -1,0 +1,30 @@
+# This file is for configuring editor settings. For detailed C++ code style,
+# refer to the .clang-format file in the project root.
+
+# This is the top-most .editorconfig file
+root = true
+
+# Apply to all files
+[*]
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+# Apply to C/C++ source and header files
+[*.{c,cpp,h,hpp,cxx,hxx}]
+indent_style = space
+indent_size = 2
+tab_width = 8
+max_line_length = 80
+
+# Settings for Dockerfiles
+[{Dockerfile,*.dockerfile}]
+indent_style = space
+indent_size = 2
+
+# Settings for shell scripts, based on Emacs/Vim modelines
+[*.{sh,bash,zsh}]
+indent_style = space
+indent_size = 4
+tab_width = 8

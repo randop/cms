@@ -3,8 +3,26 @@ name: CI
 on:
   push:
     branches: ["master"]
+    paths-ignore:
+      - '**/*.md'
+      - '.editorconfig'
+      - '.gitignore'
+      - '.clang-format'
+      - 'cms.kdev4'
+      - '.dockerignore'
+      - 'LICENSE'
+      - '.codespellrc'
   pull_request:
     branches: ["master"]
+    paths-ignore:
+      - '**/*.md'
+      - '.editorconfig'
+      - '.gitignore'
+      - '.clang-format'
+      - 'cms.kdev4'
+      - '.dockerignore'
+      - 'LICENSE'
+      - '.codespellrc'
   schedule:
     - cron: '0 0 * * 1' # Runs at 00:00 on every Monday UTC
 
