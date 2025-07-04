@@ -34,3 +34,9 @@ tab_width = 4
 indent_style = space
 indent_size = 2
 tab_width = 4
+
+# Settings for Meson
+[meson.build]
+indent_style = space
+indent_size = 2
+tab_width = 4
