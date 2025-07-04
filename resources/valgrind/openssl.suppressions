@@ -1,0 +1,20 @@
+{
+   OpenSSL_all_leaks
+   Memcheck:Leak
+   ...
+   obj:*/libcrypto.so*
+}
+
+{
+   OpenSSL_all_uninit
+   Memcheck:Cond
+   ...
+   obj:*/libcrypto.so*
+}
+
+{
+   OpenSSL_all_values
+   Memcheck:Value8
+   ...
+   obj:*/libcrypto.so*
+}

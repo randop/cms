@@ -8,7 +8,7 @@ COPY . .
 
 # Install development dependencies
 RUN echo "Installing development packages..." && \
-    apt update && apt install -y --no-install-recommends \
+    apt update -qqq && apt install -qqq -y --no-install-recommends \
     git \
     && rm -rf /var/lib/apt/lists/*
 
@@ -50,7 +50,7 @@ ENV LD_LIBRARY_PATH=/usr/local/lib
 
 # Install runtime dependencies
 RUN echo "Installing runtime packages..." && \
-    apt update && apt install -y -qq --no-install-recommends \
+    apt update -qqq && apt install -qqq -y --no-install-recommends \
     openssl \
     ca-certificates \
     libmongoc-1.0-0 \

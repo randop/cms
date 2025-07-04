@@ -2,3 +2,10 @@
 directory = cmark
 url = https://github.com/commonmark/cmark.git
 revision = 0.31.1
+
+[provide]
+cmark = cmark_dep
+
+[cmake]
+CMAKE_C_FLAGS = -Wno-stringop-overflow
+CMAKE_CXX_FLAGS = -Wno-stringop-overflow

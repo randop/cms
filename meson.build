@@ -8,7 +8,7 @@ project(
     'strip=true',
     'b_lto=true',
     'b_ndebug=true',
-    'cpp_std=c++20',
+    'cpp_std=c++20'
   ],
   meson_version: '>= 1.0.1',
 )
@@ -32,7 +32,12 @@ deps = []
 
 cmake = import('cmake')
 
-cmark = cmake.subproject('cmark')
+cmark_opts = cmake.subproject_options()
+cmark_opts.add_cmake_defines({
+                               'CMAKE_C_FLAGS': '-Wno-stringop-overflow',
+                               'CMAKE_CXX_FLAGS': '-Wno-stringop-overflow'
+                             })
+cmark = cmake.subproject('cmark', options: cmark_opts)
 cmark_dep = cmark.get_variable('cmark_dep')
 
 thread_dep = dependency('threads')
@@ -56,18 +61,20 @@ spdlog_dep = spdlog.get_variable('spdlog_dep')
 
 openssl_dep = dependency('openssl', required: true)
 
-mongocxx_dep = dependency('mongocxx', version: '>=4.1.0', required: false)
-bsoncxx_dep = dependency('bsoncxx', version: '>=4.1.0', required: false)
+mongocxx_dep = dependency('mongocxx', version: '>=4.1.1', required: false)
+bsoncxx_dep = dependency('bsoncxx', version: '>=4.1.1', required: false)
 
-if not mongocxx_dep.found() or not bsoncxx_dep.found()
+if not mongocxx_dep.found() or not bsoncxx_dep.found()  
+  mongocxx_opts = cmake.subproject_options()
+  mongocxx_opts.add_cmake_defines({
+                                 'CMAKE_PREFIX_PATH': '/opt/mongo-c-driver/current',
+                                 'BUILD_SHARED_AND_STATIC_LIBS': 'ON',
+                                 'NEED_DOWNLOAD_C_DRIVER': false,
+                                 'ENABLE_TESTS': 'OFF'
+                               })
   mongocxx = cmake.subproject(
     'mongo-cxx-driver',
-    cmake_options: [
-      '-DCMAKE_PREFIX_PATH=/opt/mongo-c-driver/current',
-      '-DBUILD_SHARED_AND_STATIC_LIBS=ON',
-      '-DNEED_DOWNLOAD_C_DRIVER=false',
-      '-DENABLE_TESTS=OFF'
-    ],
+    options: mongocxx_opts
   )
   mongocxx_dep = mongocxx.dependency('mongocxx_static')
   bsoncxx_dep = mongocxx.dependency('bsoncxx_static')
@@ -123,6 +130,6 @@ executable(
     bsoncxx_dep,
   ],
   include_directories: inc_dirs,
-  cpp_args: ['-DPQXX_HEADER_ONLY=1', '-DBOOST_ALL_NO_LIB', '-DFMT_HEADER_ONLY'],
+  cpp_args: ['-DBOOST_ALL_NO_LIB', '-DFMT_HEADER_ONLY'],
   link_args: ['-Wl,--gc-sections', '-Wl,-O2'],
 )

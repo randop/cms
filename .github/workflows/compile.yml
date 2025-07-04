@@ -33,7 +33,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install development toolchain
-        run: sudo apt install -y -qq git meson libboost-all-dev
+        run: sudo apt install -qqq -y git meson libboost-all-dev
       - name: Make script executable
         run: chmod +x scripts/mongoc.sh
       - name: Run mongo c driver compile script
