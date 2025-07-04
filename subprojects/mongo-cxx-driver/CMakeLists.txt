@@ -45,11 +45,9 @@ else()
 endif()
 
 # Also update etc/purls.txt.
-set(BSON_REQUIRED_VERSION 2.0.2)
-set(MONGOC_REQUIRED_VERSION 2.0.2)
-set(MONGOC_DOWNLOAD_VERSION 2.0.2)
-
-include(FetchMongoC)
+set(BSON_REQUIRED_VERSION 2.0.0)
+set(MONGOC_REQUIRED_VERSION 2.0.0)
+set(MONGOC_DOWNLOAD_VERSION 2.0.0)
 
 # All of our target compilers support the deprecated
 # attribute. Normally, we would just let the GenerateExportHeader
@@ -89,7 +87,7 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 set(BUILD_VERSION "0.0.0" CACHE STRING "Library version (for both bsoncxx and mongocxx)")
 
 # Allow the user to decide whether to also build static libraries
-option(BUILD_SHARED_AND_STATIC_LIBS "Build static libraries" ON)
+option(BUILD_SHARED_AND_STATIC_LIBS "Build static libraries" OFF)
 
 # Allow the user to decide whether to use shared libraries or static libraries
 # for the mongo-c-driver
@@ -320,6 +318,8 @@ endif()
 if(ENABLE_TESTS)
     enable_testing()
 endif()
+
+include(FetchMongoC)
 
 add_subdirectory(src)
 

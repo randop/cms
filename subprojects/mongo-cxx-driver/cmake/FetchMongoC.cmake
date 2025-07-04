@@ -68,9 +68,6 @@ if(NOT ((TARGET bson_shared OR TARGET bson_static) AND (TARGET mongoc_shared OR 
     endif()
 endif()
 
-# custom override to use local mongodb c driver
-set_property(CACHE NEED_DOWNLOAD_C_DRIVER PROPERTY VALUE false)
-
 if($CACHE{NEED_DOWNLOAD_C_DRIVER})
     message(STATUS "MongoDB C Driver library sources will be downloaded from GitHub")
     fetch_mongoc()

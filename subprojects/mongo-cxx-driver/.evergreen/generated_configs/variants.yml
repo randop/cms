@@ -1,0 +1,102 @@
+buildvariants:
+  - name: abi-stability
+    display_name: ABI Stability Checks
+    tasks:
+      - name: tg-abi-stability-impls-cxx11
+      - name: tg-abi-stability-impls-cxx17
+      - name: tg-abi-stability-stdlib-cxx17
+      - name: tg-abi-stability-stdlib-cxx20
+      - name: tg-abi-stability-stdlib-cxx23
+  - name: atlas-search-indexes-matrix
+    display_name: atlas-search-indexes-matrix
+    tasks:
+      - name: tg-atlas-search-indexes-7.0
+      - name: tg-atlas-search-indexes-8.0
+  - name: benchmarks
+    display_name: benchmarks
+    tasks:
+      - name: .benchmarks
+  - name: clang-tidy
+    display_name: Clang Tidy
+    tasks:
+      - name: .clang-tidy
+  - name: cmake-compat-matrix
+    display_name: CMake Compatibility Matrix
+    tasks:
+      - name: .cmake-compat
+  - name: compile-only-matrix
+    display_name: compile-only-matrix
+    tasks:
+      - name: .compile-only .rhel8-power
+        batchtime: 1440
+      - name: .compile-only .rhel8-zseries
+        batchtime: 1440
+      - name: .compile-only !.rhel8-power !.rhel8-zseries
+  - name: docker-build
+    display_name: Docker Build
+    tasks:
+      - name: .docker-build
+  - name: integration-matrix-linux
+    display_name: integration-matrix-linux
+    tasks:
+      - name: .integration .linux !.mongocryptd .rhel8-power
+        batchtime: 1440
+      - name: .integration .linux !.mongocryptd .rhel8-zseries
+        batchtime: 1440
+      - name: .integration .linux !.mongocryptd !.rhel8-power !.rhel8-zseries
+  - name: integration-matrix-macos
+    display_name: integration-matrix-macos
+    tasks:
+      - name: .integration .macos !.mongocryptd
+  - name: integration-matrix-mongocryptd
+    display_name: integration-matrix-mongocryptd
+    tasks:
+      - name: .integration .mongocryptd .rhel8-power
+        batchtime: 1440
+      - name: .integration .mongocryptd .rhel8-zseries
+        batchtime: 1440
+      - name: .integration .mongocryptd !.rhel8-power !.rhel8-zseries
+  - name: integration-matrix-windows
+    display_name: integration-matrix-windows
+    tasks:
+      - name: .integration .windows !.mongocryptd
+  - name: lint
+    display_name: Lint
+    tasks:
+      - name: .lint
+  - name: macro-guards-matrix
+    display_name: macro-guards-matrix
+    tasks:
+      - name: .macro-guards
+  - name: mongohouse
+    display_name: Mongohouse
+    tasks:
+      - name: .mongohouse
+  - name: packaging
+    display_name: Linux Distro Packaging
+    tasks:
+      - name: .packaging
+  - name: sanitizers-matrix
+    display_name: sanitizers-matrix
+    tasks:
+      - name: .sanitizers
+  - name: sbom
+    display_name: SBOM
+    tasks:
+      - name: .sbom
+  - name: scan-build-matrix
+    display_name: scan-build-matrix
+    tasks:
+      - name: .scan-build
+  - name: uninstall-check
+    display_name: Uninstall Check
+    tasks:
+      - name: .uninstall-check
+  - name: valgrind-matrix
+    display_name: valgrind-matrix
+    tasks:
+      - name: .valgrind
+  - name: versioned-api-matrix
+    display_name: versioned-api-matrix
+    tasks:
+      - name: .versioned-api

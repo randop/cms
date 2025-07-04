@@ -64,6 +64,9 @@ if not mongocxx_dep.found() or not bsoncxx_dep.found()
     'mongo-cxx-driver',
     cmake_options: [
       '-DCMAKE_PREFIX_PATH=/opt/mongo-c-driver/current',
+      '-DBUILD_SHARED_AND_STATIC_LIBS=ON',
+      '-DNEED_DOWNLOAD_C_DRIVER=false',
+      '-DENABLE_TESTS=OFF'
     ],
   )
   mongocxx_dep = mongocxx.dependency('mongocxx_static')
