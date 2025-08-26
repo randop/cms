@@ -45,7 +45,7 @@ thread_dep = dependency('threads')
 boost_dep = dependency(
   'boost',
   version: '>=1.80.0',
-  modules: ['system', 'filesystem', 'thread', 'url', 'program_options'],
+  modules: ['filesystem', 'thread', 'url', 'program_options'],
   required: true,
   static: true,
 )
