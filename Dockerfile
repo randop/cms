@@ -14,16 +14,16 @@ RUN echo "Installing development packages..." && \
 
 RUN echo "Compiling mongodb c driver.." && \
     mkdir -p /opt/mongo-c-driver/current && \
-    git clone -b 2.0.2 --depth 1 https://github.com/mongodb/mongo-c-driver.git /opt/mongo-c-driver/2.0.2
+    git clone -b 2.1.0 --depth 1 https://github.com/mongodb/mongo-c-driver.git /opt/mongo-c-driver/2.1.0
 
 RUN echo "Patching to disable OCSP..." && \
-    sed -i "/#if (OPENSSL_VERSION_NUMBER >= 0x10001000L)/i #define OPENSSL_NO_OCSP 1" /opt/mongo-c-driver/2.0.2/src/libmongoc/src/mongoc/mongoc-openssl-private.h
+    sed -i "/#if (OPENSSL_VERSION_NUMBER >= 0x10001000L)/i #define OPENSSL_NO_OCSP 1" /opt/mongo-c-driver/2.1.0/src/libmongoc/src/mongoc/mongoc-openssl-private.h
 
 RUN echo "Compiling mongocxx-driver..." && \
-    cd /opt/mongo-c-driver/2.0.2 && \
+    cd /opt/mongo-c-driver/2.1.0 && \
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current . && \
-    cd /opt/mongo-c-driver/2.0.2 && make all install && \
-    echo "/opt/mongo-c-driver/current" > /etc/ld.so.conf.d/boost.conf && \
+    cd /opt/mongo-c-driver/2.1.0 && make all install && \
+    echo "/opt/mongo-c-driver/current" > /etc/ld.so.conf.d/mongoc-driver.conf && \
     ldconfig
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/opt/mongo-c-driver/current/lib
@@ -40,7 +40,7 @@ RUN echo "Compiling application..." && \
     meson compile -C build
 
 RUN echo "Cleaning up..." && \
-    rm -rf /opt/mongo-c-driver/2.0.2
+    rm -rf /opt/mongo-c-driver/2.1.0
 
 # Runtime stage: Use Debian Bookworm Slim for runtime
 FROM debian:bookworm-slim
