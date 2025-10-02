@@ -30,24 +30,24 @@ Originated from [https://gitlab.com/randop/applications/](https://gitlab.com/ran
 1. `libmongoc` and `libbson`
 ```bash
 sudo mkdir -p /opt/mongo-c-driver/current
-sudo git clone -b 2.1.0 --depth 1 https://github.com/mongodb/mongo-c-driver.git /opt/mongo-c-driver/2.1.0
-sudo cd /opt/mongo-c-driver/2.1.0 && cmake -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current .
-sudo cd /opt/mongo-c-driver/2.1.0 && make all install
+sudo git clone -b 2.1.1 --depth 1 https://github.com/mongodb/mongo-c-driver.git /opt/mongo-c-driver/2.1.1
+sudo cd /opt/mongo-c-driver/2.1.1 && cmake -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current .
+sudo cd /opt/mongo-c-driver/2.1.1 && make all install
 sudo echo "/opt/mongo-c-driver/current" > /etc/ld.so.conf.d/mongoc-driver.conf
 sudo ldconfig
 ```
 
 ## Development
-* 1.) Boot the development mongo database
+1.) Boot the development mongo database
 ```bash
 docker compose up --renew-anon-volumes
 ```
-* 2.) Configure the Build
+2.) Configure the Build
 ```bash
 export LD_LIBRARY_PATH=/usr/local/lib:/opt/boost/current/lib:/opt/mongo-c-driver/current/lib
 meson setup build --prefer-static --default-library=static
 ```
-* 3.) Compile
+3.) Compile
 ```bash
 meson compile -C build
 ```
