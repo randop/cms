@@ -39,16 +39,16 @@ sudo ldconfig
 ```
 
 ## Development
-1.) Boot the development mongo database
+1. Boot the development mongo database
 ```bash
 docker compose up --renew-anon-volumes
 ```
-2.) Configure the Build
+2. Configure the Build
 ```bash
 export LD_LIBRARY_PATH=/usr/local/lib:/opt/boost/current/lib:/opt/mongo-c-driver/current/lib
 meson setup build --prefer-static --default-library=static
 ```
-3.) Compile
+3. Compile
 ```bash
 meson compile -C build
 ```
@@ -61,4 +61,4 @@ docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/blog:latest 
 
 Copyright © 2010 — 2025 [Randolph Ledesma](https://github.com/randop).
 
-Last updated on 2025-10-03T09:16:10.000Z UTC
+Last updated on 2025-10-10T05:24:03.000Z UTC
