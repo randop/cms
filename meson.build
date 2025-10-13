@@ -33,9 +33,10 @@ deps = []
 cmake = import('cmake')
 
 cmark_opts = cmake.subproject_options()
+cmark_opts.set_override_option('b_lto', 'false')
+cmark_opts.append_compile_args('c', '-Wno-stringop-overflow')
 cmark_opts.add_cmake_defines({
-                               'CMAKE_C_FLAGS': '-Wno-stringop-overflow',
-                               'CMAKE_CXX_FLAGS': '-Wno-stringop-overflow'
+                               'CMAKE_C_FLAGS': '-Wno-stringop-overflow'
                              })
 cmark = cmake.subproject('cmark', options: cmark_opts)
 cmark_dep = cmark.get_variable('cmark_dep')
