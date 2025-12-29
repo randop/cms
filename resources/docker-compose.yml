@@ -5,7 +5,7 @@
 
 services:
   mongodb:
-    image: mongodb/mongodb-community-server:8.0.6-ubi9
+    image: mongodb/mongodb-community-server:8.0-ubi8
     container_name: cms-mongodb
     network_mode: host
     ports:
