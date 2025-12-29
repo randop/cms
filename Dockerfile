@@ -39,7 +39,7 @@ RUN echo "Patching mongocxx-driver build..." && \
     echo "${MONGODBCXXDRIVER_VERSION}" > /app/subprojects/mongo-cxx-driver/VERSION_CURRENT
 
 RUN echo "Configuring build..." && \
-    meson setup build --prefer-static --default-library=static
+    meson setup build --prefer-static --default-library=static -Dbuild_environment=container
 
 RUN echo "Compiling application..." && \
     meson compile -C build

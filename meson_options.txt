@@ -1,0 +1,7 @@
+option(
+    'build_environment',
+    type: 'combo',
+    value: 'native',
+    description: 'Build environment type: "native" (optimize for host CPU with -march=native) or "container" (portable x86-64 baseline)',
+    choices: ['native', 'container']
+)

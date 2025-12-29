@@ -92,24 +92,44 @@ inc_dirs = [inc_src, inc_inc]
 # Compiler Options
 ###############################################################################
 cpp = meson.get_compiler('cpp')
-if cpp.get_id() == 'gcc' or cpp.get_id() == 'clang'
+
+if get_option('build_environment') == 'container'
   add_project_arguments(
     [
-      '-march=native', # Optimize for the host CPU
-      '-mtune=native', # Tune for the host CPU
-      '-ffast-math', # Enable fast math optimizations
-      '-flto', # Ensure LTO is enabled
+      '-march=x86-64',
+      '-mtune=generic',
+      '-ffast-math',
+      '-flto',
     ],
     language: 'cpp',
   )
   add_project_link_arguments(
     [
-      '-flto', # LTO for linker
+      '-flto',
       '-Wl,--gc-sections', # Remove unused sections
     ],
     language: 'cpp',
   )
-endif
+else
+  if cpp.get_id() == 'gcc' or cpp.get_id() == 'clang'
+    add_project_arguments(
+      [
+        '-march=native', # Optimize for the host CPU
+        '-mtune=native', # Tune for the host CPU
+        '-ffast-math', # Enable fast math optimizations
+        '-flto', # Ensure LTO is enabled
+      ],
+      language: 'cpp',
+    )
+    add_project_link_arguments(
+      [
+        '-flto', # LTO for linker
+        '-Wl,--gc-sections', # Remove unused sections
+      ],
+      language: 'cpp',
+    )
+  endif
+endif  
 
 ###############################################################################
 # Sources
