@@ -59,6 +59,6 @@ docker buildx create --name multiarch --use
 docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/blog:latest --push .
 ```
 
-Copyright © 2010 — 2025 [Randolph Ledesma](https://github.com/randop).
+Copyright © 2010 — 2026 [Randolph Ledesma](https://github.com/randop).
 
-Last updated on 2025-10-10T05:24:03.000Z UTC
+Last updated on 2026-01-01T00:00:00.000Z UTC
