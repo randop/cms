@@ -32,6 +32,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Update package manager
+        run: sudo apt update -qqq -y
       - name: Install development toolchain
         run: sudo apt install -qqq -y git meson libboost-all-dev
       - name: Make script executable
