@@ -73,6 +73,24 @@ static void constructor(test_batch_runner *runner) {
   }
 }
 
+static void classifiers(test_batch_runner *runner) {
+  cmark_node *node = cmark_node_new(CMARK_NODE_BLOCK_QUOTE);
+  OK(runner, cmark_node_is_block(node), "is block CMARK_NODE_BLOCK_QUOTE");
+  OK(runner, !cmark_node_is_inline(node), "is not inline CMARK_NODE_BLOCK_QUOTE");
+  OK(runner, !cmark_node_is_leaf(node), "is not leaf CMARK_NODE_BLOCK_QUOTE");
+  cmark_node_free(node);
+  node = cmark_node_new(CMARK_NODE_EMPH);
+  OK(runner, !cmark_node_is_block(node), "is not block CMARK_NODE_EMPH");
+  OK(runner, cmark_node_is_inline(node), "is inline CMARK_NODE_EMPH");
+  OK(runner, !cmark_node_is_leaf(node), "is not leaf CMARK_NODE_EMPH");
+  cmark_node_free(node);
+  node = cmark_node_new(CMARK_NODE_THEMATIC_BREAK);
+  OK(runner, cmark_node_is_block(node), "is block CMARK_NODE_THEMATIC_BREAK");
+  OK(runner, !cmark_node_is_inline(node), "is not inline CMARK_NODE_THEMATIC_BREAK");
+  OK(runner, cmark_node_is_leaf(node), "is leaf CMARK_NODE_THEMATIC_BREAK");
+  cmark_node_free(node);
+}
+
 static void accessors(test_batch_runner *runner) {
   static const char markdown[] = "## Header\n"
                                  "\n"
@@ -713,7 +731,7 @@ static void render_commonmark(test_batch_runner *runner) {
   cmark_node *text = cmark_node_new(CMARK_NODE_TEXT);
   cmark_node_set_literal(text, "Hi");
   commonmark = cmark_render_commonmark(text, CMARK_OPT_DEFAULT, 0);
-  STR_EQ(runner, commonmark, "Hi\n", "render single inline node");
+  STR_EQ(runner, commonmark, "Hi", "render single inline node");
   free(commonmark);
 
   cmark_node_free(text);
@@ -982,7 +1000,7 @@ static void sub_document(test_batch_runner *runner) {
 
 static void source_pos(test_batch_runner *runner) {
   static const char markdown[] =
-    "# Hi *there*.\n"
+    "# Hi **there*.\n"
     "\n"
     "Hello &ldquo; <http://www.google.com>\n"
     "there `hi` -- [okay](www.google.com (ok)).\n"
@@ -998,12 +1016,12 @@ static void source_pos(test_batch_runner *runner) {
   STR_EQ(runner, xml, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                       "<!DOCTYPE document SYSTEM \"CommonMark.dtd\">\n"
                       "<document sourcepos=\"1:1-10:20\" xmlns=\"http://commonmark.org/xml/1.0\">\n"
-                      "  <heading sourcepos=\"1:1-1:13\" level=\"1\">\n"
-                      "    <text sourcepos=\"1:3-1:5\" xml:space=\"preserve\">Hi </text>\n"
-                      "    <emph sourcepos=\"1:6-1:12\">\n"
-                      "      <text sourcepos=\"1:7-1:11\" xml:space=\"preserve\">there</text>\n"
+                      "  <heading sourcepos=\"1:1-1:14\" level=\"1\">\n"
+                      "    <text sourcepos=\"1:3-1:6\" xml:space=\"preserve\">Hi *</text>\n"
+                      "    <emph sourcepos=\"1:7-1:13\">\n"
+                      "      <text sourcepos=\"1:8-1:12\" xml:space=\"preserve\">there</text>\n"
                       "    </emph>\n"
-                      "    <text sourcepos=\"1:13-1:13\" xml:space=\"preserve\">.</text>\n"
+                      "    <text sourcepos=\"1:14-1:14\" xml:space=\"preserve\">.</text>\n"
                       "  </heading>\n"
                       "  <paragraph sourcepos=\"3:1-4:42\">\n"
                       "    <text sourcepos=\"3:1-3:14\" xml:space=\"preserve\">Hello “ </text>\n"
@@ -1142,6 +1160,7 @@ int main(void) {
 
   version(runner);
   constructor(runner);
+  classifiers(runner);
   accessors(runner);
   free_parent(runner);
   node_check(runner);
