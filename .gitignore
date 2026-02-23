@@ -149,6 +149,7 @@ dist
 
 # Meson
 subprojects/packagecache
+subprojects/spdlog-*/
 
 # Jetbrains
 .idea

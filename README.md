@@ -9,7 +9,7 @@ Content management server project written in C++ with MongoDB
   </a>
 </p>
 
->  Copyright © 2010 — 2025 Randolph Ledesma
+>  Copyright © 2010 — 2026 Randolph Ledesma
 >
 > Licensed under the Apache License, Version 2.0 (the "License");
 > you may not use this file except in compliance with the License.
@@ -61,4 +61,4 @@ docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/blog:latest 
 
 Copyright © 2010 — 2026 [Randolph Ledesma](https://github.com/randop).
 
-Last updated on 2026-02-05T04:30:41.000Z UTC
+Last updated on 2026-02-23T02:37:41.000Z UTC
