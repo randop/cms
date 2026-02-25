@@ -150,6 +150,7 @@ dist
 # Meson
 subprojects/packagecache
 subprojects/spdlog-*/
+subprojects/fmt-*/
 
 # Jetbrains
 .idea

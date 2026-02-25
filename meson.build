@@ -51,12 +51,17 @@ boost_dep = dependency(
   static: true,
 )
 
-fmt = subproject('fmt', default_options: ['default_library=static', 'header-only=true'])
-fmt_dep = fmt.get_variable('fmt_dep')
+fmt_dep = dependency('fmt',
+  default_options: ['default_library=static', 'header-only=true'],
+  version: '>=12.0.0',
+  fallback: ['fmt', 'fmt_header_only_dep'],
+  required: true
+)
 
 spdlog = subproject(
   'spdlog',
   default_options: ['default_library=static', 'compile_library=false'],
+  version: '>=1.17.0',
 )
 spdlog_dep = spdlog.get_variable('spdlog_dep')
 
