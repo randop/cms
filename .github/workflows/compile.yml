@@ -33,9 +33,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Update package manager
-        run: sudo apt update -qqq -y
+        run: sudo DEBIAN_FRONTEND=noninteractive apt update -qqq -y
       - name: Install development toolchain
-        run: sudo apt install -qqq -y git meson libboost-all-dev
+        run: sudo DEBIAN_FRONTEND=noninteractive apt install -qqq -y -o Dpkg::Progress-Fancy=0 -o APT::Color=0 -o Dpkg::Use-Pty=0 git meson libboost-all-dev
       - name: Make script executable
         run: chmod +x scripts/mongoc.sh
       - name: Run mongo c driver compile script
