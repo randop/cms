@@ -9,33 +9,32 @@
 ###############################################################################
 ***/
 
+#include "keyValueCache.hpp"
+#include "properties.hpp"
+#include "stringUtil.hpp"
+#include <array>
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <chrono>
 #include <cmark.h>
+#include <iomanip>
+#include <iostream>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
-#include <spdlog/spdlog.h>
-
-#include <array>
-#include <chrono>
-#include <iomanip>
-#include <iostream>
 #include <optional>
+#include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
-
-#include "include/stringUtil.hpp"
-#include "keyValueCache.hpp"
 
 /***
 ###############################################################################
@@ -57,22 +56,6 @@ using bsoncxx::builder::stream::open_document;
 
 namespace pt = boost::posix_time;
 namespace gr = boost::gregorian;
-
-constexpr bsoncxx::stdx::string_view kIdField{"id"};
-constexpr bsoncxx::stdx::string_view kFromField{"from"};
-constexpr bsoncxx::stdx::string_view kLocalField{"localField"};
-constexpr bsoncxx::stdx::string_view kForeignField{"foreignField"};
-constexpr bsoncxx::stdx::string_view kModesCollection{"modes"};
-constexpr bsoncxx::stdx::string_view kModeIdField{"modeId"};
-constexpr bsoncxx::stdx::string_view kLayoutsCollection{"layouts"};
-constexpr bsoncxx::stdx::string_view kLayoutIdField{"layoutId"};
-constexpr bsoncxx::stdx::string_view kPagesCollection{"pages"};
-constexpr bsoncxx::stdx::string_view kTitleField{"title"};
-constexpr bsoncxx::stdx::string_view kContentField{"content"};
-constexpr bsoncxx::stdx::string_view kHeaderField{"header"};
-constexpr bsoncxx::stdx::string_view kFooterField{"footer"};
-constexpr bsoncxx::stdx::string_view kLayoutField{"layout"};
-constexpr bsoncxx::stdx::string_view kCreatedAtField{"createdAt"};
 
 using string = std::string;
 
@@ -186,7 +169,7 @@ string Page::getPage(const std::string_view &host,
       spdlog::warn("No result for Page::getPage => {}", pageId);
     }
   } catch (const std::exception &e) {
-    spdlog::error("get page failure: {}", e.what());
+    spdlog::error("Page::get exception: {}", e.what());
   }
 
   string_util::StringReplacer replacer("<title>%REPLACE_WITH_TITLE_ID%</title>",

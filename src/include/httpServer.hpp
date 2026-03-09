@@ -250,7 +250,7 @@ handle_request(std::shared_ptr<cms::Post> post, std::shared_ptr<cms::Page> page,
         return not_found(req.target());
       }
 
-      std::string content = post->getPost(postId);
+      std::string content = post->getPost(host, dbName, postId);
 
       if (postId > NONE_POST_ID && !content.empty()) {
         return html_response(content);
