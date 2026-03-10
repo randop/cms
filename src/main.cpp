@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
   auto const threadCount = std::max<int>(1, numThreads);
 
   auto content = std::make_shared<cms::Content>(mongoDbPool, std::ref(cache));
-  auto page = std::make_shared<cms::Page>(mongoDbPool, std::ref(cache));
+  auto page = std::make_shared<cms::Page>(mongoDbPool, content);
   auto post = std::make_shared<cms::Post>(mongoDbPool, content);
 
   // The io_context is required for all I/O

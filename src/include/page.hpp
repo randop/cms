@@ -58,7 +58,7 @@ using string = std::string;
 class Page {
 public:
   explicit Page(std::shared_ptr<mongocxx::pool> dbPool,
-                services::KeyValueCache &cacheRef);
+                std::shared_ptr<Content> contentPtr);
 
   // Default destructor
   ~Page() = default;
@@ -69,12 +69,13 @@ public:
 
 private:
   std::shared_ptr<mongocxx::pool> pool;
-  services::KeyValueCache &cache;
+  std::shared_ptr<Content> content;
+  ContentIdType idType;
 };
 
 Page::Page(std::shared_ptr<mongocxx::pool> dbPool,
-           services::KeyValueCache &cacheRef)
-    : pool(dbPool), cache(cacheRef) {
+           std::shared_ptr<Content> contentPtr)
+    : pool(dbPool), content(contentPtr), idType(ContentIdType::String) {
   if (!pool) {
     throw std::invalid_argument("Invalid or null mongodb pool");
   }
@@ -83,101 +84,8 @@ Page::Page(std::shared_ptr<mongocxx::pool> dbPool,
 string Page::getPage(const std::string_view &host,
                      const bsoncxx::stdx::string_view &dbName,
                      const string &pageId) {
-  string cacheKey{dbName};
-  cacheKey.append("_page_");
-  cacheKey.append(pageId);
-
-  if (auto cacheValue = cache.get(cacheKey)) {
-    return cacheValue.value();
-  }
-
-  string page;
-  string titleTag;
-
-  try {
-    auto client = pool->acquire();
-    auto db = client[dbName];
-
-    auto collection = db[kPagesCollection];
-
-    mongocxx::pipeline pageByIdPipeline;
-    pageByIdPipeline.lookup(make_document(
-        kvp(kFromField, kModesCollection), kvp(kLocalField, kModeIdField),
-        kvp(kForeignField, kIdField), kvp("as", "mode")));
-    pageByIdPipeline.unwind("$mode");
-
-    pageByIdPipeline.lookup(make_document(
-        kvp(kFromField, kLayoutsCollection), kvp(kLocalField, kLayoutIdField),
-        kvp(kForeignField, kIdField), kvp("as", "layout")));
-    pageByIdPipeline.unwind("$layout");
-
-    pageByIdPipeline.match(make_document(kvp(kIdField, pageId)));
-    auto cursor = collection.aggregate(pageByIdPipeline);
-
-    int modeId = MODE_HTML;
-    bool found = false;
-    for (const auto &doc : cursor) {
-      found = true;
-      if (doc[kModeIdField]) {
-        modeId = doc[kModeIdField].type() == bsoncxx::type::k_int32
-                     ? doc[kModeIdField].get_int32().value
-                     : static_cast<int>(doc[kModeIdField].get_int64().value);
-      }
-
-      auto titleValue = doc[kTitleField].get_string().value;
-      titleTag.append("<title>");
-      titleTag.append(titleValue.data(), titleValue.size());
-      titleTag.append("</title>");
-
-      auto headerValue = doc[kLayoutField][kHeaderField].get_string().value;
-      page.append(headerValue.data(), headerValue.size());
-
-      auto contentValue = doc[kContentField].get_string().value;
-      bsoncxx::types::b_date createdAt = doc[kCreatedAtField].get_date();
-
-      if (modeId == MODE_MARKDOWN) {
-        auto html = std::unique_ptr<char, void (*)(void *)>(
-            cmark_markdown_to_html(contentValue.data(), contentValue.size(),
-                                   CMARK_OPT_DEFAULT),
-            std::free);
-        page.append("<h1>");
-        page.append(titleValue.data(), titleValue.size());
-        page.append("</h1><h4>");
-        page.append(string_util::timestamp(createdAt));
-        page.append("</h4>");
-        page.append(html.get());
-      } else if (modeId == MODE_HTML) {
-        page.append(contentValue.data(), contentValue.size());
-      }
-
-      auto footerValue = doc[kLayoutField][kFooterField].get_string().value;
-      page.append(footerValue.data(), footerValue.size());
-
-      /***
-       * //DEBUG
-       * std::cout << bsoncxx::to_json(doc) << std::endl;
-       ***/
-      break;
-    }
-
-    if (!found) {
-      spdlog::warn("No result for Page::getPage => {}", pageId);
-    }
-  } catch (const std::exception &e) {
-    spdlog::error("Page::get exception: {}", e.what());
-  }
-
-  string_util::StringReplacer replacer("<title>%REPLACE_WITH_TITLE_ID%</title>",
-                                       titleTag);
-  string resultPage = replacer.replace(page, 1);
-
-  int64_t ttl = 900; // 15 minutes TTL.
-  if (cache.set(cacheKey, resultPage, ttl)) {
-    spdlog::info("get page ({}) set cache ({})", pageId, cacheKey);
-  } else {
-    spdlog::error("get page ({}) failed to set cache ({})", pageId, cacheKey);
-  }
-  return resultPage;
+  return content->render(host, dbName, "page", kPagesCollection, idType,
+                         kIdField, pageId, kTitleField);
 }
 
 } // namespace cms
