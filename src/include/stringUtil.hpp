@@ -3,6 +3,8 @@
 #ifndef CMS_STRING_UTIL_HPP
 #define CMS_STRING_UTIL_HPP
 
+#include <boost/optional.hpp>
+#include <bsoncxx/types.hpp>
 #include <cerrno>
 #include <charconv>
 #include <chrono>
@@ -11,13 +13,11 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <sys/sysinfo.h>
 #include <sys/utsname.h>
 #include <unordered_set>
-
-#include <boost/optional.hpp>
-#include <spdlog/spdlog.h>
 
 namespace string_util {
 

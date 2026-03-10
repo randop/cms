@@ -13,4 +13,6 @@ const int MODE_HTML = 2;
 const int DEFAULT_PORT = 10000;
 const int NONE_POST_ID = 0;
 
+enum class ContentIdType : int { Integer = 0, String = 1 };
+
 #endif // BLOG_CONSTANTS_H

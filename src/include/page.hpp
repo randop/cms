@@ -9,8 +9,8 @@
 ###############################################################################
 ***/
 
+#include "content.hpp"
 #include "keyValueCache.hpp"
-#include "properties.hpp"
 #include "stringUtil.hpp"
 #include <array>
 #include <boost/date_time/gregorian/gregorian.hpp>
@@ -53,15 +53,10 @@ using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_array;
 using bsoncxx::builder::stream::open_document;
-
-namespace pt = boost::posix_time;
-namespace gr = boost::gregorian;
-
 using string = std::string;
 
 class Page {
 public:
-  // Constructor taking a shared_ptr to mongodb uri
   explicit Page(std::shared_ptr<mongocxx::pool> dbPool,
                 services::KeyValueCache &cacheRef);
 
