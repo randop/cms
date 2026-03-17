@@ -12,6 +12,7 @@ const int MODE_MARKDOWN = 1;
 const int MODE_HTML = 2;
 const int DEFAULT_PORT = 10000;
 const int NONE_POST_ID = 0;
+const long unsigned int MAX_POST_URL_SEGMENTS = 10;
 
 enum class ContentIdType : int { Integer = 0, String = 1 };
 

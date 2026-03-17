@@ -229,10 +229,10 @@ handle_request(std::shared_ptr<cms::Post> post, std::shared_ptr<cms::Page> page,
              req.target().find("/posts/") != beast::string_view::npos) {
     int postId = NONE_POST_ID;
     if (segments.size() >= 2) {
-      int index = 0;
-
+      long unsigned int index = 0;
+      const long unsigned int lastSegment = segments.size() - 1;
       for (const auto &segment : segments) {
-        if (index == 1) {
+        if (index == lastSegment) {
           // Converts string segment to int with numeric validation
           auto [ptr, ec] = std::from_chars(
               segment.data(), segment.data() + segment.size(), postId);
@@ -241,6 +241,8 @@ handle_request(std::shared_ptr<cms::Post> post, std::shared_ptr<cms::Page> page,
           } else {
             postId = NONE_POST_ID;
           }
+          break;
+        } else if (index > MAX_POST_URL_SEGMENTS) {
           break;
         }
         ++index;
