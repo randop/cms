@@ -42,11 +42,28 @@ set(bsoncxx_sources_v_noabi
 )
 
 set(bsoncxx_sources_v1
+    bsoncxx/v1/array/value.cpp
+    bsoncxx/v1/array/view.cpp
     bsoncxx/v1/config/config.cpp
     bsoncxx/v1/config/export.cpp
     bsoncxx/v1/config/version.cpp
+    bsoncxx/v1/decimal128.cpp
     bsoncxx/v1/detail/postlude.cpp
     bsoncxx/v1/detail/prelude.cpp
+    bsoncxx/v1/document/value.cpp
+    bsoncxx/v1/document/view.cpp
+    bsoncxx/v1/element/view.cpp
+    bsoncxx/v1/exception.cpp
+    bsoncxx/v1/oid.cpp
+    bsoncxx/v1/types/id.cpp
+    bsoncxx/v1/types/value.cpp
+    bsoncxx/v1/types/view.cpp
+)
+
+file(GLOB_RECURSE bsoncxx_headers
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "*.hh"
 )
 
 list(APPEND bsoncxx_sources
@@ -88,18 +105,8 @@ set_dist_list(src_bsoncxx_lib_DIST
     ${bsoncxx_sources_private}
     ${bsoncxx_sources_v_noabi}
     ${bsoncxx_sources_v1}
-    bsoncxx/private/b64_ntop.hh
+    ${bsoncxx_headers}
     bsoncxx/private/config/config.hh.in
-    bsoncxx/private/convert.hh
-    bsoncxx/private/export.hh
-    bsoncxx/private/helpers.hh
-    bsoncxx/private/itoa.hh
-    bsoncxx/private/bson.hh
-    bsoncxx/private/make_unique.hh
-    bsoncxx/private/stack.hh
-    bsoncxx/private/suppress_deprecation_warnings.hh
-    bsoncxx/private/version.hh
-    bsoncxx/v_noabi/bsoncxx/types/bson_value/value.hh
     bsoncxx/v1/config/config.hpp.in
     bsoncxx/v1/config/version.hpp.in
 )

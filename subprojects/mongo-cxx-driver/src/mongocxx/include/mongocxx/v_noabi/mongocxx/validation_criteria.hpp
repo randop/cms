@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/validation_criteria-fwd.hpp>
+#include <mongocxx/validation_criteria-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -176,8 +176,8 @@ operator!=(validation_criteria const& lhs, validation_criteria const& rhs);
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::operator==;
-using ::mongocxx::v_noabi::operator!=;
+using v_noabi::operator==;
+using v_noabi::operator!=;
 
 } // namespace mongocxx
 

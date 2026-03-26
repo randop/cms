@@ -17,7 +17,7 @@
 #include <cstdint>
 #include <memory>
 
-#include <bsoncxx/validate-fwd.hpp>
+#include <bsoncxx/validate-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -162,7 +162,7 @@ class validator {
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::validate;
+using v_noabi::validate;
 
 } // namespace bsoncxx
 

@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "assert.hh"
-#include "entity.hh"
-#include "operations.hh"
+#include "./assert.hh"
+#include "./entity.hh"
+#include "./operations.hh"
+
+#include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <fstream>
 #include <numeric>
@@ -37,7 +39,6 @@
 
 #include <bsoncxx/test/catch.hh>
 
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/util.hh>
 
@@ -270,19 +271,7 @@ bool compatible_with_server(bsoncxx::array::element const& requirement) {
         return equals_server_topology(topologies);
 
     if (auto const server_params = requirement["serverParameters"]) {
-        document::value actual = make_document();
-        try {
-            actual = test_util::get_server_params();
-        } catch (operation_exception const& e) {
-            // Mongohouse does not support getParameter, so if we get an error from
-            // getParameter, exit this logic early and skip the test.
-            std::string const message = e.what();
-            if (message.find("command getParameter is unsupported") != std::string::npos) {
-                return false;
-            }
-
-            throw e;
-        }
+        document::value const actual = test_util::get_server_params();
 
         for (auto const& kvp : server_params.get_document().view()) {
             auto const param = kvp.key();
@@ -294,20 +283,6 @@ bool compatible_with_server(bsoncxx::array::element const& requirement) {
         }
     }
 
-    if (auto const csfle = requirement["csfle"]) {
-        // csfle: Optional boolean. If true, the tests MUST only run if the
-        // driver and server support Client-Side Field Level Encryption. A
-        // server supports CSFLE if it is version 4.2.0 or higher. If false,
-        // tests MUST only run if CSFLE is not enabled. If this field is
-        // omitted, there is no CSFLE requirement.
-        std::vector<int> const requires_at_least{4, 2, 0};
-        bool const is_csfle = csfle.get_bool().value;
-        if (is_csfle) {
-            if (!is_compatible_version(requires_at_least, expected)) {
-                return false;
-            }
-        }
-    }
     return true;
 }
 
@@ -1321,8 +1296,6 @@ void run_unified_format_tests_in_env_dir(
     if (!files.good()) {
         FAIL("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
     }
-
-    instance::current();
 
     for (std::string file; std::getline(files, file);) {
         DYNAMIC_SECTION(file) {

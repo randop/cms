@@ -13,10 +13,8 @@
 # limitations under the License.
 
 set(mongocxx_sources_private
-    mongocxx/private/bson.cpp
-    mongocxx/private/conversions.cpp
     mongocxx/private/mongoc.cpp
-    mongocxx/private/numeric_casting.cpp
+    mongocxx/private/scoped_bson.cpp
 )
 
 set(mongocxx_sources_v_noabi
@@ -29,6 +27,7 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/config/config.cpp
     mongocxx/v_noabi/mongocxx/config/export.cpp
     mongocxx/v_noabi/mongocxx/config/version.cpp
+    mongocxx/v_noabi/mongocxx/conversions.cpp
     mongocxx/v_noabi/mongocxx/cursor.cpp
     mongocxx/v_noabi/mongocxx/database.cpp
     mongocxx/v_noabi/mongocxx/events/command_failed_event.cpp
@@ -121,11 +120,91 @@ set(mongocxx_sources_v_noabi
 )
 
 set(mongocxx_sources_v1
+    mongocxx/v1/aggregate_options.cpp
+    mongocxx/v1/apm.cpp
+    mongocxx/v1/auto_encryption_options.cpp
+    mongocxx/v1/bulk_write.cpp
+    mongocxx/v1/change_stream.cpp
+    mongocxx/v1/client_encryption.cpp
+    mongocxx/v1/client_session.cpp
+    mongocxx/v1/client.cpp
+    mongocxx/v1/collection.cpp
     mongocxx/v1/config/config.cpp
     mongocxx/v1/config/export.cpp
     mongocxx/v1/config/version.cpp
+    mongocxx/v1/count_options.cpp
+    mongocxx/v1/cursor.cpp
+    mongocxx/v1/data_key_options.cpp
+    mongocxx/v1/database.cpp
+    mongocxx/v1/delete_many_options.cpp
+    mongocxx/v1/delete_many_result.cpp
+    mongocxx/v1/delete_one_options.cpp
+    mongocxx/v1/delete_one_result.cpp
     mongocxx/v1/detail/postlude.cpp
     mongocxx/v1/detail/prelude.cpp
+    mongocxx/v1/distinct_options.cpp
+    mongocxx/v1/encrypt_options.cpp
+    mongocxx/v1/estimated_document_count_options.cpp
+    mongocxx/v1/events/command_failed.cpp
+    mongocxx/v1/events/command_started.cpp
+    mongocxx/v1/events/command_succeeded.cpp
+    mongocxx/v1/events/server_closed.cpp
+    mongocxx/v1/events/server_description_changed.cpp
+    mongocxx/v1/events/server_description.cpp
+    mongocxx/v1/events/server_heartbeat_failed.cpp
+    mongocxx/v1/events/server_heartbeat_started.cpp
+    mongocxx/v1/events/server_heartbeat_succeeded.cpp
+    mongocxx/v1/events/server_opening.cpp
+    mongocxx/v1/events/topology_closed.cpp
+    mongocxx/v1/events/topology_description_changed.cpp
+    mongocxx/v1/events/topology_description.cpp
+    mongocxx/v1/events/topology_opening.cpp
+    mongocxx/v1/exception.cpp
+    mongocxx/v1/find_one_and_delete_options.cpp
+    mongocxx/v1/find_one_and_replace_options.cpp
+    mongocxx/v1/find_one_and_update_options.cpp
+    mongocxx/v1/find_options.cpp
+    mongocxx/v1/gridfs/bucket.cpp
+    mongocxx/v1/gridfs/downloader.cpp
+    mongocxx/v1/gridfs/upload_options.cpp
+    mongocxx/v1/gridfs/upload_result.cpp
+    mongocxx/v1/gridfs/uploader.cpp
+    mongocxx/v1/hint.cpp
+    mongocxx/v1/indexes.cpp
+    mongocxx/v1/insert_many_options.cpp
+    mongocxx/v1/insert_many_result.cpp
+    mongocxx/v1/insert_one_options.cpp
+    mongocxx/v1/insert_one_result.cpp
+    mongocxx/v1/instance.cpp
+    mongocxx/v1/logger.cpp
+    mongocxx/v1/pipeline.cpp
+    mongocxx/v1/pool.cpp
+    mongocxx/v1/range_options.cpp
+    mongocxx/v1/read_concern.cpp
+    mongocxx/v1/read_preference.cpp
+    mongocxx/v1/replace_one_options.cpp
+    mongocxx/v1/replace_one_result.cpp
+    mongocxx/v1/return_document.cpp
+    mongocxx/v1/rewrap_many_datakey_options.cpp
+    mongocxx/v1/rewrap_many_datakey_result.cpp
+    mongocxx/v1/search_indexes.cpp
+    mongocxx/v1/server_api.cpp
+    mongocxx/v1/server_error.cpp
+    mongocxx/v1/text_options.cpp
+    mongocxx/v1/tls.cpp
+    mongocxx/v1/transaction_options.cpp
+    mongocxx/v1/update_many_options.cpp
+    mongocxx/v1/update_many_result.cpp
+    mongocxx/v1/update_one_options.cpp
+    mongocxx/v1/update_one_result.cpp
+    mongocxx/v1/uri.cpp
+    mongocxx/v1/write_concern.cpp
+)
+
+file(GLOB_RECURSE mongocxx_headers
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "*.hh"
 )
 
 list(APPEND mongocxx_sources
@@ -181,41 +260,8 @@ set_dist_list(src_mongocxx_lib_DIST
     ${mongocxx_sources_private}
     ${mongocxx_sources_v_noabi}
     ${mongocxx_sources_v1}
-    mongocxx/private/append_aggregate_options.hh
-    mongocxx/private/bson.hh
-    mongocxx/private/bulk_write.hh
-    mongocxx/private/change_stream.hh
-    mongocxx/private/client_encryption.hh
-    mongocxx/private/client_session.hh
-    mongocxx/private/client.hh
-    mongocxx/private/collection.hh
+    ${mongocxx_headers}
     mongocxx/private/config/config.hh.in
-    mongocxx/private/conversions.hh
-    mongocxx/private/cursor.hh
-    mongocxx/private/database.hh
-    mongocxx/private/export.hh
-    mongocxx/private/index_view.hh
-    mongocxx/private/mock.hh
-    mongocxx/private/mongoc_error.hh
-    mongocxx/private/mongoc.hh
-    mongocxx/private/numeric_casting.hh
-    mongocxx/private/pipeline.hh
-    mongocxx/private/pool.hh
-    mongocxx/private/read_concern.hh
-    mongocxx/private/read_preference.hh
-    mongocxx/private/scoped_bson_value.hh
-    mongocxx/private/search_index_model.hh
-    mongocxx/private/search_index_view.hh
-    mongocxx/private/ssl.hh
-    mongocxx/private/uri.hh
-    mongocxx/private/write_concern.hh
-    mongocxx/v_noabi/mongocxx/gridfs/bucket.hh
-    mongocxx/v_noabi/mongocxx/gridfs/downloader.hh
-    mongocxx/v_noabi/mongocxx/gridfs/uploader.hh
-    mongocxx/v_noabi/mongocxx/options/apm.hh
-    mongocxx/v_noabi/mongocxx/options/server_api.hh
-    mongocxx/v_noabi/mongocxx/options/tls.hh
-    mongocxx/v_noabi/mongocxx/options/transaction.hh
     mongocxx/v1/config/config.hpp.in
     mongocxx/v1/config/version.hpp.in
 )
