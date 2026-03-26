@@ -12,6 +12,7 @@ on:
       - '.dockerignore'
       - 'LICENSE'
       - '.codespellrc'
+      - '.gitlab-ci.yml'
   pull_request:
     branches: ["master"]
     paths-ignore:
