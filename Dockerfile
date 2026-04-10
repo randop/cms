@@ -13,7 +13,8 @@ COPY . .
 
 # Install development dependencies
 RUN echo "Installing development packages..." && \
-    apt update -qqq && apt install -qqq -y --no-install-recommends \
+    DEBIAN_FRONTEND=noninteractive apt update -qqq && \
+    DEBIAN_FRONTEND=noninteractive apt install -qqq -y -o Dpkg::Progress-Fancy=0 -o APT::Color=0 -o Dpkg::Use-Pty=0 --no-install-recommends \
     git \
     && rm -rf /var/lib/apt/lists/*
 
