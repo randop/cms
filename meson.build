@@ -68,11 +68,11 @@ spdlog_dep = spdlog.get_variable('spdlog_dep')
 
 openssl_dep = dependency('openssl', required : true)
 
-mongoc_dep = dependency('mongoc2-static', static: true, required: true, version: '>=2.2.4')
-bson_dep = dependency('bson2-static', static: true, required: true, version: '>=2.2.4')
+mongoc_dep = dependency('mongoc2-static', static : true, required : true, version : '>=2.2.4')
+bson_dep = dependency('bson2-static', static : true, required : true, version : '>=2.2.4')
 
-mongocxx_dep = dependency('mongocxx_static', version : '>=4.1.1', required : false, static: true)
-bsoncxx_dep = dependency('bsoncxx_static', version : '>=4.1.1', required : false, static: true)
+mongocxx_dep = dependency('mongocxx_static', version : '>=4.1.1', required : false, static : true)
+bsoncxx_dep = dependency('bsoncxx_static', version : '>=4.1.1', required : false, static : true)
 
 if not mongocxx_dep.found() or not bsoncxx_dep.found()
   mongocxx_opts = cmake.subproject_options()
@@ -107,9 +107,29 @@ inc_dirs = [inc_src, inc_inc]
 cpp = meson.get_compiler('cpp')
 
 if get_option('build_environment') == 'container'
+  # Auto-detect architecture and choose appropriate -march
+  host_cpu = host_machine.cpu_family()
+  if host_cpu == 'x86_64'
+    add_project_arguments(
+      [
+        '-march=x86-64'
+      ],
+      language : 'cpp',
+    )
+  elif host_cpu == 'aarch64' or host_cpu == 'arm64'
+    add_project_arguments(
+      [
+        '-march=armv8-a'
+      ],
+      language : 'cpp',
+    )
+  else
+    # Fallback for other architectures (or you can error() here)
+    march_flag = '-march=native'
+  endif
+
   add_project_arguments(
     [
-      '-march=x86-64',
       '-mtune=generic',
       '-ffast-math',
       '-flto',

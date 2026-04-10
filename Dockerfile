@@ -52,7 +52,8 @@ RUN echo "Compiling application..." && \
     meson compile -C build
 
 RUN echo "Cleaning up..." && \
-    rm -rf /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}
+    rm -rf /opt/mongo-c-driver && \
+    rm -rf /opt/boost*
 
 # Runtime stage: distroless debian
 FROM gcr.io/distroless/cc-debian13:nonroot
