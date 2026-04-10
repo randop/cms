@@ -2,7 +2,7 @@
 # Build stage: Use pre-built Boost C++ image
 FROM rfledesma/boost:latest AS builder
 
-ARG MONGODBCDRIVER_VERSION=2.2.3
+ARG MONGODBCDRIVER_VERSION=2.2.4
 ARG MONGODBCXXDRIVER_VERSION=4.2.0
 
 ENV MONGODB_DRIVER_VERSION=$MONGODBCDRIVER_VERSION
@@ -28,8 +28,12 @@ RUN echo "Compiling mongocxx-driver version ${MONGODBCDRIVER_VERSION} ..." && \
     cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && \
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current . && \
     cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && make all install && \
-    echo "/opt/mongo-c-driver/current" > /etc/ld.so.conf.d/mongoc-driver.conf && \
-    ldconfig
+    echo "/opt/mongo-c-driver/current/lib" > /etc/ld.so.conf.d/mongoc-driver.conf && \
+    ldconfig && \
+    ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/mongoc.pc && \
+    ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/mongoc2.pc && \
+    ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2.pc /usr/lib/pkgconfig/bson.pc && \
+    ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2.pc /usr/lib/pkgconfig/bson2.pc
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/opt/mongo-c-driver/current/lib
 
