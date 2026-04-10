@@ -32,8 +32,10 @@ RUN echo "Compiling mongocxx-driver version ${MONGODBCDRIVER_VERSION} ..." && \
     ldconfig && \
     ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/mongoc.pc && \
     ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/mongoc2.pc && \
-    ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2.pc /usr/lib/pkgconfig/bson.pc && \
-    ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2.pc /usr/lib/pkgconfig/bson2.pc
+    ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2-static.pc /usr/lib/pkgconfig/mongoc2-static.pc && \
+    ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson.pc && \
+    ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson2.pc && \
+    ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson2-static.pc
 
 ENV LD_LIBRARY_PATH=/usr/local/lib:/opt/mongo-c-driver/current/lib
 
@@ -51,38 +53,12 @@ RUN echo "Compiling application..." && \
 RUN echo "Cleaning up..." && \
     rm -rf /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}
 
-# Runtime stage: Use Debian Bookworm Slim for runtime
-FROM debian:bookworm-slim
-
-# Set runtime library path
-ENV LD_LIBRARY_PATH=/usr/local/lib
-
-# Install runtime dependencies
-RUN echo "Installing runtime packages..." && \
-    apt update -qqq && apt install -qqq -y --no-install-recommends \
-    openssl \
-    ca-certificates \
-    libmongoc-1.0-0 \
-    libbson-1.0-0 \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY --from=builder /opt/mongo-c-driver/current/lib /usr/local/lib/
-RUN echo "Linking MongoDB C Driver..." && \
-    echo "/usr/local/lib" > /etc/ld.so.conf.d/mongo.conf \
-    && ldconfig
-
-# Create nonroot user and group
-RUN echo "Configuring nonroot account..." && \
-    groupadd -r nonroot && useradd -r -g nonroot -d /home/nonroot -s /sbin/nologin nonroot && \
-    mkdir -p /home/nonroot && chown nonroot:nonroot /home/nonroot
+# Runtime stage: distroless debian
+FROM gcr.io/distroless/cc-debian13:nonroot
 
 # Copy compiled C++ service and healthcheck script from builder
 WORKDIR /app
-COPY --from=builder --chown=nonroot:nonroot /app/build/cms /app/
-
-# Set ownership for app directory
-RUN echo "Setting application directory permissions..." && \
-    chown -R nonroot:nonroot /app
+COPY --from=builder --chown=nonroot:nonroot /app/build/cms /app/cms
 
 # Switch to nonroot user
 USER nonroot

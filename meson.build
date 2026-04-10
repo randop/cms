@@ -3,6 +3,7 @@ project(
   'cpp',
   version : run_command('cat', 'VERSION', check : true).stdout().strip(),
   default_options : [
+    'default_library=static',
     'buildtype=release',
     'optimization=3',
     'strip=true',
@@ -67,16 +68,23 @@ spdlog_dep = spdlog.get_variable('spdlog_dep')
 
 openssl_dep = dependency('openssl', required : true)
 
-mongocxx_dep = dependency('mongocxx', version : '>=4.1.1', required : false)
-bsoncxx_dep = dependency('bsoncxx', version : '>=4.1.1', required : false)
+mongoc_dep = dependency('mongoc2-static', static: true, required: true, version: '>=2.2.4')
+bson_dep = dependency('bson2-static', static: true, required: true, version: '>=2.2.4')
+
+mongocxx_dep = dependency('mongocxx_static', version : '>=4.1.1', required : false, static: true)
+bsoncxx_dep = dependency('bsoncxx_static', version : '>=4.1.1', required : false, static: true)
 
 if not mongocxx_dep.found() or not bsoncxx_dep.found()
   mongocxx_opts = cmake.subproject_options()
   mongocxx_opts.add_cmake_defines({
                                     'CMAKE_PREFIX_PATH' : '/opt/mongo-c-driver/current',
-                                    'BUILD_SHARED_AND_STATIC_LIBS' : 'ON',
+                                    'BUILD_SHARED_LIBS' : 'OFF',
+                                    'BUILD_SHARED_AND_STATIC_LIBS' : 'OFF',
                                     'NEED_DOWNLOAD_C_DRIVER' : false,
-                                    'ENABLE_TESTS' : 'OFF'
+                                    'CMAKE_BUILD_TYPE' : 'Release',
+                                    'ENABLE_TESTS' : 'OFF',
+                                    'ENABLE_UNINSTALL' : 'OFF',
+                                    'ENABLE_EXAMPLES' : 'OFF'
                                   })
   mongocxx = cmake.subproject(
     'mongo-cxx-driver',
@@ -155,6 +163,8 @@ executable(
     openssl_dep,
     mongocxx_dep,
     bsoncxx_dep,
+    mongoc_dep,
+    bson_dep
   ],
   include_directories : inc_dirs,
   cpp_args : ['-DBOOST_ALL_NO_LIB', '-DFMT_HEADER_ONLY'],

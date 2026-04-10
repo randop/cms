@@ -37,11 +37,15 @@ sudo cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && make all install
 sudo echo "/opt/mongo-c-driver/current/lib" > /etc/ld.so.conf.d/mongoc-driver.conf
 sudo ldconfig
 sudo rm -fv /usr/lib/pkgconfig/mongoc.pc /usr/lib/pkgconfig/bson.pc
+sudo rm -fv /usr/lib/pkgconfig/mongoc-static.pc /usr/lib/pkgconfig/bson-static.pc
 sudo rm -fv /usr/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/bson2.pc
+sudo rm -fv /usr/lib/pkgconfig/mongoc2-static.pc /usr/lib/pkgconfig/bson2-static.pc
 sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/mongoc.pc
 sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/mongoc2.pc
-sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2.pc /usr/lib/pkgconfig/bson.pc
-sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2.pc /usr/lib/pkgconfig/bson2.pc
+sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2-static.pc /usr/lib/pkgconfig/mongoc2-static.pc
+sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson.pc
+sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson2.pc
+sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson2-static.pc
 ```
 
 ## Development
