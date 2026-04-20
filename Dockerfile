@@ -2,7 +2,7 @@
 # Build stage: Use pre-built Boost C++ image
 FROM rfledesma/boost:latest AS builder
 
-ARG MONGODBCDRIVER_VERSION=2.2.4
+ARG MONGODBCDRIVER_VERSION=2.3.0
 ARG MONGODBCXXDRIVER_VERSION=4.2.0
 
 ENV MONGODB_DRIVER_VERSION=$MONGODBCDRIVER_VERSION
@@ -25,9 +25,9 @@ RUN echo "Compiling mongodb c driver version ${MONGODBCDRIVER_VERSION} ..." && \
 RUN echo "Patching to disable OCSP..." && \
     sed -i "/#if (OPENSSL_VERSION_NUMBER >= 0x10001000L)/i #define OPENSSL_NO_OCSP 1" /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/src/libmongoc/src/mongoc/mongoc-openssl-private.h
 
-RUN echo "Compiling mongocxx-driver version ${MONGODBCDRIVER_VERSION} ..." && \
+RUN echo "Compiling mongoc-driver version ${MONGODBCDRIVER_VERSION} ..." && \
     cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && \
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current . && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=OFF -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current . && \
     cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && make all install && \
     echo "/opt/mongo-c-driver/current/lib" > /etc/ld.so.conf.d/mongoc-driver.conf && \
     ldconfig && \

@@ -29,11 +29,12 @@ Originated from [https://gitlab.com/randop/applications/](https://gitlab.com/ran
 ## Dependencies
 1. `libmongoc` and `libbson`
 ```bash
-export MONGODBCDRIVER_VERSION="2.2.4"
+export MONGODBCDRIVER_VERSION="2.3.0"
 sudo mkdir -p /opt/mongo-c-driver/current
 sudo git clone -b ${MONGODBCDRIVER_VERSION} --depth 1 https://github.com/mongodb/mongo-c-driver.git /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}
-sudo cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && cmake -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current .
-sudo cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && make all install
+sudo mkdir -p /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/build 
+sudo cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/build && cmake .. -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current
+sudo cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/build && make install
 sudo echo "/opt/mongo-c-driver/current/lib" > /etc/ld.so.conf.d/mongoc-driver.conf
 sudo ldconfig
 sudo rm -fv /usr/lib/pkgconfig/mongoc.pc /usr/lib/pkgconfig/bson.pc
@@ -71,4 +72,4 @@ docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/blog:latest 
 
 Copyright © 2010 — 2026 [Randolph Ledesma](https://github.com/randop).
 
-Last updated on 2026-04-10T04:37:52.000Z UTC
+Last updated on 2026-04-20T14:12:35.000Z UTC
