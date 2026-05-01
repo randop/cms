@@ -376,6 +376,10 @@ void append_to(v_noabi::options::find const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("skip", BCON_INT64(*opt))};
     }
 
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+    }
+
     if (auto const& opt = opts.sort()) {
         doc += scoped_bson{BCON_NEW("sort", BCON_DOCUMENT(to_scoped_bson_view(*opt).bson()))};
     }
@@ -406,6 +410,10 @@ void append_to(v_noabi::options::replace const& opts, scoped_bson& doc) {
 }
 
 void append_to(v_noabi::options::update const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+    }
+
     if (auto const& opt = opts.write_concern()) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
     }

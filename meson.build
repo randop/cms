@@ -68,11 +68,11 @@ spdlog_dep = spdlog.get_variable('spdlog_dep')
 
 openssl_dep = dependency('openssl', required : true)
 
-mongoc_dep = dependency('mongoc2-static', static : true, required : true, version : '>=2.2.4')
-bson_dep = dependency('bson2-static', static : true, required : true, version : '>=2.2.4')
+mongoc_dep = dependency('mongoc2-static', static : true, required : true, version : '>=2.3.0')
+bson_dep = dependency('bson2-static', static : true, required : true, version : '>=2.3.0')
 
-mongocxx_dep = dependency('mongocxx_static', version : '>=4.1.1', required : false, static : true)
-bsoncxx_dep = dependency('bsoncxx_static', version : '>=4.1.1', required : false, static : true)
+mongocxx_dep = dependency('mongocxx_static', version : '>=4.3.0', required : false, static : true)
+bsoncxx_dep = dependency('bsoncxx_static', version : '>=4.3.0', required : false, static : true)
 
 if not mongocxx_dep.found() or not bsoncxx_dep.found()
   mongocxx_opts = cmake.subproject_options()

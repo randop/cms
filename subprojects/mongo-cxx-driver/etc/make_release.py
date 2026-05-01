@@ -100,7 +100,7 @@ ISSUE_TYPE_ID = {
 )
 @click.option(
     '--c-driver-build-ref',
-    default='2.2.3',
+    default='2.3.0',
     show_default=True,
     help='When building the C driver, build at this Git reference',
 )
@@ -537,7 +537,7 @@ def all_issues_closed(issues):
 
     status_set = set(i.fields.status.name for i in issues)
 
-    if status_set.difference({'Closed'}):
+    if status_set.difference({'Closed', 'Development Complete'}):
         msg = 'Open tickets found.  Cannot release!'
         msg += '\nThe following open tickets were found:'
         click.echo(msg, err=True)

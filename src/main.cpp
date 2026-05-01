@@ -105,9 +105,10 @@ int main(int argc, char *argv[]) {
 
   std::shared_ptr<mongocxx::pool> mongoDbPool;
 
+  // Initialize the MongoDB C++ driver
+  mongocxx::instance inst{};
+
   try {
-    // Initialize the MongoDB C++ driver
-    mongocxx::instance inst{};
     mongocxx::uri uri(mongoDbUrl);
 
     // Set the version of the Stable API on the client

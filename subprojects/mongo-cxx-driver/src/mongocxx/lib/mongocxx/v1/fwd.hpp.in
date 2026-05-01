@@ -14,24 +14,14 @@
 
 #pragma once
 
-#include <mongocxx/v1/events/command_failed.hpp> // IWYU pragma: export
+// clang-format off
+@MONGOCXX_V1_FWD_INCLUDES@
+// clang-format on
 
-//
-
-#include <mongocxx/private/export.hh>
-#include <mongocxx/private/mongoc.hh>
-
-namespace mongocxx {
-namespace v1 {
-namespace events {
-
-class command_failed::internal {
-   public:
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(command_failed) make(mongoc_apm_command_failed_t const* ptr);
-
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_apm_command_failed_t const*) as_mongoc(command_failed const& self);
-};
-
-} // namespace events
-} // namespace v1
-} // namespace mongocxx
+///
+/// @file
+/// Aggregate of all forward headers declaring entities in @ref mongocxx::v1.
+///
+/// @par Includes
+/// - All header files under `mongocxx/v1` whose filename ends with `-fwd.hpp`.
+///

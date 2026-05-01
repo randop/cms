@@ -38,6 +38,11 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0.24210")
         message(FATAL_ERROR "Visual Studio 13 2015 Update 3 or newer is required")
     endif()
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.10.25017")
+        message(DEPRECATION "Visual Studio 2017 version 15.0 or newer will be required")
+        # TODO(CXX-3215) replace DEPRECATION with:
+        # message(FATAL_ERROR "Visual Studio 2017 version 15.0 or newer is required")
+    endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
     # https://developer.apple.com/xcode/cpp/
     # https://en.wikipedia.org/wiki/Xcode#Version_comparison_table
@@ -57,9 +62,9 @@ else()
 endif()
 
 # Also update etc/purls.txt.
-set(BSON_REQUIRED_VERSION 2.2.3)
-set(MONGOC_REQUIRED_VERSION 2.2.3)
-set(MONGOC_DOWNLOAD_VERSION 2.2.3)
+set(BSON_REQUIRED_VERSION 2.3.0)
+set(MONGOC_REQUIRED_VERSION 2.3.0)
+set(MONGOC_DOWNLOAD_VERSION 2.3.0)
 
 # All of our target compilers support the deprecated
 # attribute. Normally, we would just let the GenerateExportHeader
