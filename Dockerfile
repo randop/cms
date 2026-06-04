@@ -23,7 +23,10 @@ RUN echo "Compiling mongodb c driver version ${MONGODBCDRIVER_VERSION} ..." && \
     git clone -b ${MONGODBCDRIVER_VERSION} --depth 1 https://github.com/mongodb/mongo-c-driver.git /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}
 
 RUN echo "Patching to disable OCSP..." && \
-    sed -i "/#if (OPENSSL_VERSION_NUMBER >= 0x10001000L)/i #define OPENSSL_NO_OCSP 1" /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/src/libmongoc/src/mongoc/mongoc-openssl-private.h
+    sed -i "/#if (OPENSSL_VERSION_NUMBER >= 0x10001000L)/i #define OPENSSL_NO_OCSP 1" /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/src/libmongoc/src/mongoc/mongoc-openssl-private.h 
+
+RUN echo "Patching OpenSSL regression..." && \
+    sed -i 's/MONGOC_ERROR("Could not set cipher list for TLSv1.2 and below: %s", ERR_STR)/char _err_buf[256]; ERR_error_string_n(ERR_get_error(), _err_buf, sizeof(_err_buf)); MONGOC_ERROR("Could not set cipher list for TLSv1.2 and below: %s", _err_buf)/' /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/src/libmongoc/src/mongoc/mongoc-openssl.c
 
 RUN echo "Compiling mongoc-driver version ${MONGODBCDRIVER_VERSION} ..." && \
     cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && \

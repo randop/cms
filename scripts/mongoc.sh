@@ -9,6 +9,7 @@ sudo git clone \
   -b ${MONGODBCDRIVER_VERSION} \
   --depth 1 https://github.com/mongodb/mongo-c-driver.git /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}
 sudo sed -i "/#if (OPENSSL_VERSION_NUMBER >= 0x10001000L)/i #define OPENSSL_NO_OCSP 1" /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/src/libmongoc/src/mongoc/mongoc-openssl-private.h
+sudo sed -i 's/MONGOC_ERROR("Could not set cipher list for TLSv1.2 and below: %s", ERR_STR)/char _err_buf[256]; ERR_error_string_n(ERR_get_error(), _err_buf, sizeof(_err_buf)); MONGOC_ERROR("Could not set cipher list for TLSv1.2 and below: %s", _err_buf)/' /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/src/libmongoc/src/mongoc/mongoc-openssl.c
 sudo mkdir -p /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/build
 cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/build
 sudo cmake .. -DCMAKE_BUILD_TYPE=Release \
