@@ -47,6 +47,7 @@ function(fetch_mongoc)
     message(STATUS "Downloading and configuring MongoDB C Driver ${MONGOC_DOWNLOAD_VERSION}... done.")
 endfunction()
 
+set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "")
 # Prevent downloading it
 # mongoc-driver is provided
 set_property(CACHE NEED_DOWNLOAD_C_DRIVER PROPERTY VALUE false)
