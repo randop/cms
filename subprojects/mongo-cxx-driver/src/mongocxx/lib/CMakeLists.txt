@@ -125,6 +125,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/auto_encryption_options.cpp
     mongocxx/v1/bulk_write.cpp
     mongocxx/v1/change_stream.cpp
+    mongocxx/v1/client_bulk_write.cpp
     mongocxx/v1/client_encryption.cpp
     mongocxx/v1/client_session.cpp
     mongocxx/v1/client.cpp
@@ -177,6 +178,9 @@ set(mongocxx_sources_v1
     mongocxx/v1/insert_one_result.cpp
     mongocxx/v1/instance.cpp
     mongocxx/v1/logger.cpp
+    mongocxx/v1/oidc_callback.cpp
+    mongocxx/v1/oidc_callback_params.cpp
+    mongocxx/v1/oidc_credential.cpp
     mongocxx/v1/pipeline.cpp
     mongocxx/v1/pool.cpp
     mongocxx/v1/range_options.cpp
@@ -209,9 +213,13 @@ file(GLOB_RECURSE mongocxx_headers
 
 list(APPEND mongocxx_sources
     ${mongocxx_sources_private}
-    ${mongocxx_sources_v_noabi}
     ${mongocxx_sources_v1}
 )
+
+if(MONGOCXX_ENABLE_UNSTABLE_ABI)
+    list(APPEND mongocxx_sources ${mongocxx_sources_v_noabi})
+endif()
+
 list(TRANSFORM mongocxx_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(mongocxx_sources "${mongocxx_sources}" PARENT_SCOPE)
 
@@ -251,6 +259,17 @@ if(1)
         ${CMAKE_CURRENT_BINARY_DIR}/mongocxx/v1/config/config.hpp
         ${CMAKE_CURRENT_BINARY_DIR}/mongocxx/v1/config/version.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v1/config
+        COMPONENT dev
+    )
+
+    configure_file(
+        mongocxx/v_noabi/mongocxx/config/config.hpp.in
+        mongocxx/v_noabi/mongocxx/config/config.hpp
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/mongocxx/v_noabi/mongocxx/config/config.hpp
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi/mongocxx/config
         COMPONENT dev
     )
 
@@ -324,6 +343,7 @@ set_dist_list(src_mongocxx_lib_DIST
     ${mongocxx_sources_v1}
     ${mongocxx_headers}
     mongocxx/private/config/config.hh.in
+    mongocxx/v_noabi/mongocxx/config/config.hpp.in
     mongocxx/v_noabi/mongocxx/fwd.hpp.in
     mongocxx/v1/config/config.hpp.in
     mongocxx/v1/config/version.hpp.in

@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// For backward compatibility.
-#include <mongocxx/v1/config/config.hpp> // IWYU pragma: export
+#pragma once
+
+#include <mongocxx/client_bulk_write-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/client_bulk_write.hpp> // IWYU pragma: export
 
 ///
 /// @file
-/// Provides macros describing the mongocxx library configuration.
+/// Provides @ref mongocxx::client_bulk_write.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/config/config.hpp
+/// - @ref mongocxx/v1/client_bulk_write.hpp
 ///

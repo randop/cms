@@ -195,6 +195,11 @@ void append_to(v1::bulk_write::options const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("ordered", BCON_BOOL(false))};
     }
 
+    if (auto const& opt = v1::bulk_write::options::internal::read_concern(opts)) {
+        auto const v = opt->to_document();
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson_view{v}.bson()))};
+    }
+
     if (auto const& opt = v1::bulk_write::options::internal::write_concern(opts)) {
         auto const v = opt->to_document();
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson_view{v}.bson()))};
@@ -213,6 +218,10 @@ void append_to(v1::bulk_write::options const& opts, scoped_bson& doc) {
 void append_to(v1::count_options const& opts, scoped_bson& doc) {
     if (auto const& opt = v1::count_options::internal::collation(opts)) {
         doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::count_options::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
 
     if (auto const& opt = opts.max_time()) {
@@ -247,6 +256,10 @@ void append_to(v1::estimated_document_count_options const& opts, scoped_bson& do
 }
 
 void append_to(v1::delete_many_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = v1::delete_many_options::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
     if (auto const& opt = v1::delete_many_options::internal::write_concern(opts)) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
@@ -261,6 +274,10 @@ void append_to(v1::delete_many_options const& opts, scoped_bson& doc) {
 }
 
 void append_to(v1::delete_one_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = v1::delete_one_options::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
     if (auto const& opt = v1::delete_one_options::internal::write_concern(opts)) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
@@ -281,6 +298,10 @@ void append_to(v1::distinct_options const& opts, scoped_bson& doc) {
 
     if (auto const& opt = v1::distinct_options::internal::collation(opts)) {
         doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(scoped_bson_view{*opt}.bson()))};
+    }
+
+    if (auto const& opt = v1::distinct_options::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
 
     if (auto const& opt = v1::distinct_options::internal::comment(opts)) {
@@ -391,6 +412,10 @@ void append_to(v1::insert_many_options const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("ordered", BCON_BOOL(false))};
     }
 
+    if (auto const& opt = v1::insert_many_options::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
     if (auto const& opt = v1::insert_many_options::internal::write_concern(opts)) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
@@ -401,6 +426,10 @@ void append_to(v1::insert_many_options const& opts, scoped_bson& doc) {
 }
 
 void append_to(v1::insert_one_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = v1::insert_one_options::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
     if (auto const& opt = v1::insert_one_options::internal::write_concern(opts)) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
@@ -411,6 +440,10 @@ void append_to(v1::insert_one_options const& opts, scoped_bson& doc) {
 }
 
 void append_to(v1::replace_one_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = v1::replace_one_options::internal::read_concern(opts)) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+    }
+
     if (auto const& opt = v1::replace_one_options::internal::write_concern(opts)) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
     }
@@ -660,6 +693,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> find_and_modify_impl(
     // Some options must be passed via an `extra` BSON document.
     {
         scoped_bson extra;
+
+        if (auto const& opt = Options::internal::read_concern(options)) {
+            extra += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};
+        }
 
         if (auto const& opt = Options::internal::write_concern(options)) {
             extra += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(scoped_bson{opt->to_document()}.bson()))};

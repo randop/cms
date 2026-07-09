@@ -19,6 +19,7 @@
 //
 
 #include <mongocxx/v1/client.hpp> // IWYU pragma: export
+#include <mongocxx/v1/oidc_callback.hpp>
 
 #include <string> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <utility>
@@ -173,6 +174,30 @@ class client {
         return _server_api_opts;
     }
 
+    ///
+    /// Sets the OIDC callback.
+    ///
+    /// @param oidc_callback
+    ///   The OIDC callback.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    client& oidc_callback(v1::oidc_callback oidc_callback) {
+        _oidc_callback = std::move(oidc_callback);
+        return *this;
+    }
+
+    ///
+    /// The current OIDC callback.
+    ///
+    /// @return The OIDC callback.
+    ///
+    bsoncxx::v_noabi::stdx::optional<v1::oidc_callback> const& oidc_callback() const {
+        return _oidc_callback;
+    }
+
     class internal;
 
    private:
@@ -180,6 +205,7 @@ class client {
     bsoncxx::v_noabi::stdx::optional<apm> _apm_opts;
     bsoncxx::v_noabi::stdx::optional<auto_encryption> _auto_encrypt_opts;
     bsoncxx::v_noabi::stdx::optional<server_api> _server_api_opts;
+    bsoncxx::v_noabi::stdx::optional<v1::oidc_callback> _oidc_callback;
 
     /* explicit(false) */ client(v1::client::options opts);
 
@@ -200,7 +226,7 @@ namespace v_noabi {
 /// argument to this conversion function.
 ///
 /// @{
-MONGOCXX_ABI_EXPORT_CDECL(v_noabi::options::client) from_v1(v1::client::options v);
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::options::client) from_v1(v1::client::options v);
 
 inline v_noabi::options::client from_v1(v1::client::options v, v_noabi::options::auto_encryption opts) {
     auto ret = from_v1(std::move(v));
@@ -217,7 +243,7 @@ inline v_noabi::options::client from_v1(v1::client::options v, v_noabi::options:
 /// argument to this conversion function.
 ///
 /// @{
-MONGOCXX_ABI_EXPORT_CDECL(v1::client::options) to_v1(v_noabi::options::client const& v);
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v1::client::options) to_v1(v_noabi::options::client const& v);
 
 inline v1::client::options to_v1(v_noabi::options::client const& v, v1::auto_encryption_options opts) {
     auto ret = to_v1(v);

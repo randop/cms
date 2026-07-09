@@ -48,9 +48,6 @@ function(fetch_mongoc)
 endfunction()
 
 set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "")
-# Prevent downloading it
-# mongoc-driver is provided
-set_property(CACHE NEED_DOWNLOAD_C_DRIVER PROPERTY VALUE false)
 
 # Only search for packages if targets are not already imported via add_subdirectory().
 if(NOT ((TARGET bson_shared OR TARGET bson_static) AND (TARGET mongoc_shared OR TARGET mongoc_static)))

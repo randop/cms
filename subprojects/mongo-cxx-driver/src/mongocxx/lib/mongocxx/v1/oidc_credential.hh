@@ -12,13 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// For backward compatibility.
-#include <bsoncxx/v1/config/config.hpp> // IWYU pragma: export
+#pragma once
 
-///
-/// @file
-/// Provides macros describing the bsoncxx library configuration.
-///
-/// @par Includes
-/// - @ref bsoncxx/v1/config/config.hpp
-///
+#include <mongocxx/v1/oidc_credential.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/private/mongoc.hh>
+
+namespace mongocxx {
+namespace v1 {
+
+class oidc_credential::internal {
+   public:
+    static mongoc_oidc_credential_t* to_mongoc(oidc_credential const& cred);
+};
+
+} // namespace v1
+} // namespace mongocxx

@@ -23,6 +23,7 @@
 #include <bsoncxx/v1/types/value-fwd.hpp>
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -39,12 +40,11 @@ namespace v1 {
 /// - `bypass_document_validation` ("bypassDocumentValidation")
 /// - `comment`
 /// - `ordered`
+/// - `read_concern` ("readConcern")
 /// - `write_concern` ("writeConcern")
 ///
 /// @see
 /// - [Insert Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/insert-methods/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class insert_many_options {
    private:
@@ -94,29 +94,39 @@ class insert_many_options {
     MONGOCXX_ABI_EXPORT_CDECL() insert_many_options();
 
     ///
-    /// Set the "bypass_document_validation" field.
+    /// Set the "bypassDocumentValidation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) bypass_document_validation(bool v);
 
     ///
-    /// Return the current "bypass_document_validation" field.
+    /// Return the current "bypassDocumentValidation" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) bypass_document_validation() const;
 
     ///
-    /// Set the "write_concern" field.
+    /// Set the "readConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) write_concern(v1::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) read_concern(v1::read_concern v);
 
     ///
-    /// Return the current "write_concern" field.
+    /// Return the current "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
+
+    ///
+    /// Set the "writeConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) write_concern(v1::write_concern v);
+
+    ///
+    /// Return the current "writeConcern" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
 
     ///
     /// Set the "ordered" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) ordered(bool ordered);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) ordered(bool v);
 
     ///
     /// Return the current "ordered" field.
@@ -126,7 +136,7 @@ class insert_many_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.

@@ -20,6 +20,8 @@
 
 #include <mongocxx/v1/gridfs/upload_result.hpp> // IWYU pragma: export
 
+#include <utility>
+
 #include <bsoncxx/array/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/types/value.hpp>
 #include <bsoncxx/types/view.hpp>
@@ -58,12 +60,12 @@ class upload {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() upload(v1::gridfs::upload_result opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() upload(v1::gridfs::upload_result opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator v1::gridfs::upload_result() const;
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::gridfs::upload_result() const;
 
     ///
     /// Gets the id of the uploaded GridFS file.
@@ -89,6 +91,26 @@ class upload {
 
 } // namespace gridfs
 } // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert from the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v_noabi::result::gridfs::upload from_v1(v1::gridfs::upload_result v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::gridfs::upload_result to_v1(v_noabi::result::gridfs::upload const& v) {
+    return v1::gridfs::upload_result{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 

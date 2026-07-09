@@ -33,6 +33,7 @@
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/hint.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -54,12 +55,12 @@ class delete_options {
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() delete_options(v1::delete_many_options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() delete_options(v1::delete_many_options opts);
 
     ///
     /// Construct with the @ref mongocxx::v1 equivalent.
     ///
-    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL() delete_options(v1::delete_one_options opts);
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() delete_options(v1::delete_one_options opts);
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
@@ -72,6 +73,10 @@ class delete_options {
 
         if (_collation) {
             ret.collation(bsoncxx::v1::document::value{to_v1(_collation->view())});
+        }
+
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
         }
 
         if (_write_concern) {
@@ -106,6 +111,10 @@ class delete_options {
             ret.collation(bsoncxx::v1::document::value{to_v1(_collation->view())});
         }
 
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
+        }
+
         if (_write_concern) {
             ret.write_concern(to_v1(*_write_concern));
         }
@@ -132,7 +141,7 @@ class delete_options {
     ///   The new collation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
@@ -157,19 +166,50 @@ class delete_options {
     }
 
     ///
+    /// Sets the read_concern for this operation.
+    ///
+    /// @param rc
+    ///   The new read_concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    ///
+    delete_options& read_concern(v_noabi::read_concern rc) {
+        _read_concern = std::move(rc);
+        return *this;
+    }
+
+    ///
+    /// The current read_concern for this operation.
+    ///
+    /// @return
+    ///   The current read_concern.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    ///
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
+        return _read_concern;
+    }
+
+    ///
     /// Sets the write_concern for this operation.
     ///
     /// @param wc
     ///   The new write_concern.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    delete_options& write_concern(write_concern wc) {
+    delete_options& write_concern(v_noabi::write_concern wc) {
         _write_concern = std::move(wc);
         return *this;
     }
@@ -197,7 +237,7 @@ class delete_options {
     ///   Object representing the index to use.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     delete_options& hint(v_noabi::hint index_hint) {
@@ -221,7 +261,7 @@ class delete_options {
     ///   The new let option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     delete_options& let(bsoncxx::v_noabi::document::view_or_value let) {
@@ -246,7 +286,7 @@ class delete_options {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     delete_options& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
@@ -266,6 +306,7 @@ class delete_options {
 
    private:
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> _read_concern;
     bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
     bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;

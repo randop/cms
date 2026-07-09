@@ -25,6 +25,7 @@
 #include <bsoncxx/v1/types/value-fwd.hpp>
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/read_preference-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -43,6 +44,7 @@ namespace v1 {
 /// - `collation`
 /// - `comment`
 /// - `max_time` ("maxTimeMS")
+/// - `read_concern` ("readConcern")
 /// - `read_preference` ("readPreference")
 ///
 /// @see
@@ -98,7 +100,7 @@ class distinct_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -108,7 +110,7 @@ class distinct_options {
     ///
     /// Set the "maxTimeMS" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) max_time(std::chrono::milliseconds v);
 
     ///
     /// Return the current "maxTimeMS" field.
@@ -118,7 +120,7 @@ class distinct_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.
@@ -128,12 +130,22 @@ class distinct_options {
     ///
     /// Set the "readPreference" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) read_preference(v1::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) read_preference(v1::read_preference v);
 
     ///
     /// Return the current "readPreference" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_preference>) read_preference() const;
+
+    ///
+    /// Set the "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(distinct_options&) read_concern(v1::read_concern v);
+
+    ///
+    /// Return the current "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
 
     class internal;
 };

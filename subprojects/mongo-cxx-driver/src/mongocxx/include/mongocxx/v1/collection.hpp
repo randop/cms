@@ -32,7 +32,6 @@
 #include <mongocxx/v1/search_indexes-fwd.hpp>
 #include <mongocxx/v1/update_many_result-fwd.hpp>
 #include <mongocxx/v1/update_one_result-fwd.hpp>
-#include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/detail/type_traits.hpp>
 #include <bsoncxx/v1/document/value.hpp>
@@ -61,6 +60,7 @@
 #include <mongocxx/v1/replace_one_options.hpp>
 #include <mongocxx/v1/update_many_options.hpp>
 #include <mongocxx/v1/update_one_options.hpp>
+#include <mongocxx/v1/write_concern.hpp>
 
 #include <cstdint>
 #include <string>
@@ -77,8 +77,6 @@ namespace v1 {
 ///
 /// @see
 /// - [Databases and Collections in MongoDB (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class collection {
    private:
@@ -904,8 +902,6 @@ class collection {
     ///
     /// Errors codes which may be returned by @ref mongocxx::v1::collection.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     enum class errc {
         zero,         ///< Zero.
         max_time_u32, ///< The "maxTimeMS" field must be representable as an `std::uint32_t`.
@@ -914,14 +910,10 @@ class collection {
     ///
     /// The error category for @ref mongocxx::v1::collection::errc.
     ///
-    /// @attention This feature is experimental! It is not ready for use!
-    ///
     static MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
 
     ///
     /// Support implicit conversion to `std::error_code`.
-    ///
-    /// @attention This feature is experimental! It is not ready for use!
     ///
     friend std::error_code make_error_code(errc v) {
         return {static_cast<int>(v), error_category()};

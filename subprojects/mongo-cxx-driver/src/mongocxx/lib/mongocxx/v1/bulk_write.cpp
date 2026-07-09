@@ -22,6 +22,7 @@
 
 #include <mongocxx/v1/detail/macros.hpp>
 #include <mongocxx/v1/pipeline.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
@@ -1136,6 +1137,7 @@ class bulk_write::options::impl {
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _let;
     bool _ordered = true;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
 
     static impl const& with(options const& self) {
@@ -1189,8 +1191,8 @@ bulk_write::options::options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-bulk_write::options& bulk_write::options::bypass_document_validation(bool bypass_document_validation) {
-    impl::with(this)->_bypass_document_validation = bypass_document_validation;
+bulk_write::options& bulk_write::options::bypass_document_validation(bool v) {
+    impl::with(this)->_bypass_document_validation = v;
     return *this;
 }
 
@@ -1198,8 +1200,8 @@ bsoncxx::v1::stdx::optional<bool> bulk_write::options::bypass_document_validatio
     return impl::with(this)->_bypass_document_validation;
 }
 
-bulk_write::options& bulk_write::options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+bulk_write::options& bulk_write::options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -1207,8 +1209,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> bulk_write::options::comme
     return impl::with(this)->_comment;
 }
 
-bulk_write::options& bulk_write::options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+bulk_write::options& bulk_write::options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -1216,8 +1218,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> bulk_write::options::le
     return impl::with(this)->_let;
 }
 
-bulk_write::options& bulk_write::options::ordered(bool ordered) {
-    impl::with(this)->_ordered = ordered;
+bulk_write::options& bulk_write::options::ordered(bool v) {
+    impl::with(this)->_ordered = v;
     return *this;
 }
 
@@ -1225,8 +1227,17 @@ bool bulk_write::options::ordered() const {
     return impl::with(this)->_ordered;
 }
 
-bulk_write::options& bulk_write::options::write_concern(v1::write_concern wc) {
-    impl::with(this)->_write_concern = std::move(wc);
+bulk_write::options& bulk_write::options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> bulk_write::options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
+bulk_write::options& bulk_write::options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 
@@ -1244,6 +1255,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& bulk_write::opt
     return impl::with(self)._let;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& bulk_write::options::internal::read_concern(options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern> const& bulk_write::options::internal::write_concern(
     options const& self) {
     return impl::with(self)._write_concern;
@@ -1255,6 +1270,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& bulk_write::options::int
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& bulk_write::options::internal::let(options& self) {
     return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& bulk_write::options::internal::read_concern(options& self) {
+    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& bulk_write::options::internal::write_concern(options& self) {

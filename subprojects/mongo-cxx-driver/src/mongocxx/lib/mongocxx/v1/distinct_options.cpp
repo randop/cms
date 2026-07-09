@@ -19,6 +19,7 @@
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
@@ -36,6 +37,7 @@ class distinct_options::impl {
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
     bsoncxx::v1::stdx::optional<v1::read_preference> _read_preference;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
 
     static impl const& with(distinct_options const& self) {
         return *static_cast<impl const*>(self._impl);
@@ -88,8 +90,8 @@ distinct_options::distinct_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-distinct_options& distinct_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+distinct_options& distinct_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -97,8 +99,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> distinct_options::colla
     return impl::with(this)->_collation;
 }
 
-distinct_options& distinct_options::max_time(std::chrono::milliseconds max_time) {
-    impl::with(this)->_max_time = std::move(max_time);
+distinct_options& distinct_options::max_time(std::chrono::milliseconds v) {
+    impl::with(this)->_max_time = std::move(v);
     return *this;
 }
 
@@ -106,8 +108,8 @@ bsoncxx::v1::stdx::optional<std::chrono::milliseconds> distinct_options::max_tim
     return impl::with(this)->_max_time;
 }
 
-distinct_options& distinct_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+distinct_options& distinct_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -115,13 +117,22 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> distinct_options::comment(
     return impl::with(this)->_comment;
 }
 
-distinct_options& distinct_options::read_preference(v1::read_preference rp) {
-    impl::with(this)->_read_preference = std::move(rp);
+distinct_options& distinct_options::read_preference(v1::read_preference v) {
+    impl::with(this)->_read_preference = std::move(v);
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<v1::read_preference> distinct_options::read_preference() const {
     return impl::with(this)->_read_preference;
+}
+
+distinct_options& distinct_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> distinct_options::read_concern() const {
+    return impl::with(this)->_read_concern;
 }
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& distinct_options::internal::collation(
@@ -144,6 +155,11 @@ bsoncxx::v1::stdx::optional<v1::read_preference> const& distinct_options::intern
     return impl::with(self)._read_preference;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& distinct_options::internal::read_concern(
+    distinct_options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& distinct_options::internal::collation(
     distinct_options& self) {
     return impl::with(self)._collation;
@@ -159,6 +175,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& distinct_options::intern
 
 bsoncxx::v1::stdx::optional<v1::read_preference>& distinct_options::internal::read_preference(distinct_options& self) {
     return impl::with(self)._read_preference;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& distinct_options::internal::read_concern(distinct_options& self) {
+    return impl::with(self)._read_concern;
 }
 
 } // namespace v1

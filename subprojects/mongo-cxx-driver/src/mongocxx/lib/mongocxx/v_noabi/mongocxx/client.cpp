@@ -22,6 +22,7 @@
 
 #include <mongocxx/v1/change_stream.hh>
 #include <mongocxx/v1/client.hh>
+#include <mongocxx/v1/client_bulk_write.hh>
 #include <mongocxx/v1/client_session.hh>
 #include <mongocxx/v1/cursor.hh>
 #include <mongocxx/v1/database.hh>
@@ -109,6 +110,10 @@ client::client(v_noabi::uri const& uri, options::client const& options) {
 
     if (auto& opts = options.apm_opts()) {
         v1::client::internal::set_apm(_client, v_noabi::to_v1(*opts));
+    }
+
+    if (auto const& opts = options.oidc_callback()) {
+        v1::client::internal::set_oidc_callback(_client, *opts);
     }
 
     if (auto const& opts = options.auto_encryption_opts()) {
@@ -307,6 +312,18 @@ v_noabi::client_session client::start_session(v_noabi::options::client_session c
     }
 
     throw v_noabi::exception{v_noabi::error_code::k_cannot_create_session, error.message};
+}
+
+v1::client_bulk_write client::create_bulk_write() {
+    return check_moved_from(_client).create_bulk_write();
+}
+
+v1::client_bulk_write client::create_bulk_write(v_noabi::client_session& session) {
+    auto bulk_write = create_bulk_write();
+
+    v1::client_bulk_write::internal::set_session(bulk_write, v_noabi::client_session::internal::as_v1(session));
+
+    return bulk_write;
 }
 
 void client::reset() {

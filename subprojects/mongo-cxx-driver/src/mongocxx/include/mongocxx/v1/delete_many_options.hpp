@@ -26,6 +26,7 @@
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
 #include <mongocxx/v1/hint-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -42,13 +43,12 @@ namespace v1 {
 /// - `collation`
 /// - `hint`
 /// - `let`
+/// - `read_concern` ("readConcern")
 /// - `write_concern` ("writeConcern")
 /// - `comment`
 ///
 /// @see
 /// - [Delete Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/delete-methods/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class delete_many_options {
    private:
@@ -100,7 +100,7 @@ class delete_many_options {
     ///
     /// Set the "collation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) collation(bsoncxx::v1::document::value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) collation(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "collation" field.
@@ -108,9 +108,19 @@ class delete_many_options {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
 
     ///
+    /// Set the "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) read_concern(v1::read_concern v);
+
+    ///
+    /// Return the current "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
+
+    ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) write_concern(write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) write_concern(v1::write_concern v);
 
     ///
     /// Return the current "writeConcern" field.
@@ -120,7 +130,7 @@ class delete_many_options {
     ///
     /// Set the "hint" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) hint(v1::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) hint(v1::hint v);
 
     ///
     /// Return the current "hint" field.
@@ -130,7 +140,7 @@ class delete_many_options {
     ///
     /// Set the "let" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) let(bsoncxx::v1::document::value let);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) let(bsoncxx::v1::document::value v);
 
     ///
     /// Return the current "let" field.
@@ -140,7 +150,7 @@ class delete_many_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.

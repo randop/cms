@@ -23,6 +23,7 @@
 #include <bsoncxx/v1/types/value-fwd.hpp>
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
+#include <mongocxx/v1/read_concern-fwd.hpp>
 #include <mongocxx/v1/write_concern-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -38,12 +39,11 @@ namespace v1 {
 /// Supported fields include:
 /// - `bypass_document_validation` ("bypassDocumentValidation")
 /// - `comment`
+/// - `read_concern` ("readConcern")
 /// - `write_concern` ("writeConcern")
 ///
 /// @see
 /// - [Insert Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/insert-methods/)
-///
-/// @attention This feature is experimental! It is not ready for use!
 ///
 class insert_one_options {
    private:
@@ -95,7 +95,7 @@ class insert_one_options {
     ///
     /// Set the "bypassDocumentValidation" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) bypass_document_validation(bool v);
 
     ///
     /// Return the current "bypassDocumentValidation" field.
@@ -103,9 +103,19 @@ class insert_one_options {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) bypass_document_validation() const;
 
     ///
+    /// Set the "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) read_concern(v1::read_concern v);
+
+    ///
+    /// Return the current "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
+
+    ///
     /// Set the "writeConcern" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) write_concern(v1::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) write_concern(v1::write_concern v);
 
     ///
     /// Return the current "writeConcern" field.
@@ -115,7 +125,7 @@ class insert_one_options {
     ///
     /// Set the "comment" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) comment(bsoncxx::v1::types::value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_one_options&) comment(bsoncxx::v1::types::value v);
 
     ///
     /// Return the current "comment" field.

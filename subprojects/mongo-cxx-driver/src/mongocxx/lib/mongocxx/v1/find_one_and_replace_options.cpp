@@ -21,6 +21,7 @@
 #include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/return_document.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
@@ -43,6 +44,7 @@ class find_one_and_replace_options::impl {
     bsoncxx::v1::stdx::optional<v1::return_document> _return_document;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _sort;
     bsoncxx::v1::stdx::optional<bool> _upsert;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
 
     static impl const& with(find_one_and_replace_options const& self) {
@@ -98,8 +100,8 @@ find_one_and_replace_options::find_one_and_replace_options() : _impl{new impl{}}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-find_one_and_replace_options& find_one_and_replace_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+find_one_and_replace_options& find_one_and_replace_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -107,9 +109,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_one_and_replace_op
     return impl::with(this)->_collation;
 }
 
-find_one_and_replace_options& find_one_and_replace_options::bypass_document_validation(
-    bool bypass_document_validation) {
-    impl::with(this)->_bypass_document_validation = std::move(bypass_document_validation);
+find_one_and_replace_options& find_one_and_replace_options::bypass_document_validation(bool v) {
+    impl::with(this)->_bypass_document_validation = v;
     return *this;
 }
 
@@ -117,8 +118,8 @@ bsoncxx::v1::stdx::optional<bool> find_one_and_replace_options::bypass_document_
     return impl::with(this)->_bypass_document_validation;
 }
 
-find_one_and_replace_options& find_one_and_replace_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+find_one_and_replace_options& find_one_and_replace_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 
@@ -126,8 +127,8 @@ bsoncxx::v1::stdx::optional<v1::hint> find_one_and_replace_options::hint() const
     return impl::with(this)->_hint;
 }
 
-find_one_and_replace_options& find_one_and_replace_options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+find_one_and_replace_options& find_one_and_replace_options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -135,8 +136,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const find_one_and_repl
     return impl::with(this)->_let;
 }
 
-find_one_and_replace_options& find_one_and_replace_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+find_one_and_replace_options& find_one_and_replace_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -144,8 +145,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const find_one_and_replace
     return impl::with(this)->_comment;
 }
 
-find_one_and_replace_options& find_one_and_replace_options::max_time(std::chrono::milliseconds max_time) {
-    impl::with(this)->_max_time = std::move(max_time);
+find_one_and_replace_options& find_one_and_replace_options::max_time(std::chrono::milliseconds v) {
+    impl::with(this)->_max_time = std::move(v);
     return *this;
 }
 
@@ -153,8 +154,8 @@ bsoncxx::v1::stdx::optional<std::chrono::milliseconds> find_one_and_replace_opti
     return impl::with(this)->_max_time;
 }
 
-find_one_and_replace_options& find_one_and_replace_options::projection(bsoncxx::v1::document::value projection) {
-    impl::with(this)->_projection = std::move(projection);
+find_one_and_replace_options& find_one_and_replace_options::projection(bsoncxx::v1::document::value v) {
+    impl::with(this)->_projection = std::move(v);
     return *this;
 }
 
@@ -162,8 +163,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_one_and_replace_op
     return impl::with(this)->_projection;
 }
 
-find_one_and_replace_options& find_one_and_replace_options::return_document(v1::return_document return_document) {
-    impl::with(this)->_return_document = std::move(return_document);
+find_one_and_replace_options& find_one_and_replace_options::return_document(v1::return_document v) {
+    impl::with(this)->_return_document = std::move(v);
     return *this;
 }
 
@@ -171,8 +172,8 @@ bsoncxx::v1::stdx::optional<v1::return_document> find_one_and_replace_options::r
     return impl::with(this)->_return_document;
 }
 
-find_one_and_replace_options& find_one_and_replace_options::sort(bsoncxx::v1::document::value ordering) {
-    impl::with(this)->_sort = std::move(ordering);
+find_one_and_replace_options& find_one_and_replace_options::sort(bsoncxx::v1::document::value v) {
+    impl::with(this)->_sort = std::move(v);
     return *this;
 }
 
@@ -180,8 +181,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> find_one_and_replace_op
     return impl::with(this)->_sort;
 }
 
-find_one_and_replace_options& find_one_and_replace_options::upsert(bool upsert) {
-    impl::with(this)->_upsert = std::move(upsert);
+find_one_and_replace_options& find_one_and_replace_options::upsert(bool v) {
+    impl::with(this)->_upsert = v;
     return *this;
 }
 
@@ -189,8 +190,17 @@ bsoncxx::v1::stdx::optional<bool> find_one_and_replace_options::upsert() const {
     return impl::with(this)->_upsert;
 }
 
-find_one_and_replace_options& find_one_and_replace_options::write_concern(v1::write_concern write_concern) {
-    impl::with(this)->_write_concern = std::move(write_concern);
+find_one_and_replace_options& find_one_and_replace_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> find_one_and_replace_options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
+find_one_and_replace_options& find_one_and_replace_options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 
@@ -228,6 +238,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& find_one_and_re
     return impl::with(self)._sort;
 }
 
+bsoncxx::v1::stdx::optional<v1::read_concern> const& find_one_and_replace_options::internal::read_concern(
+    find_one_and_replace_options const& self) {
+    return impl::with(self)._read_concern;
+}
+
 bsoncxx::v1::stdx::optional<v1::write_concern> const& find_one_and_replace_options::internal::write_concern(
     find_one_and_replace_options const& self) {
     return impl::with(self)._write_concern;
@@ -261,6 +276,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_one_and_replace_
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& find_one_and_replace_options::internal::sort(
     find_one_and_replace_options& self) {
     return impl::with(self)._sort;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& find_one_and_replace_options::internal::read_concern(
+    find_one_and_replace_options& self) {
+    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& find_one_and_replace_options::internal::write_concern(

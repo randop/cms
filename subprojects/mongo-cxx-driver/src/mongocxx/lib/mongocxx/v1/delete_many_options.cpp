@@ -20,6 +20,7 @@
 #include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
 #include <bsoncxx/v1/types/value.hh>
@@ -32,6 +33,7 @@ namespace v1 {
 class delete_many_options::impl {
    public:
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
     bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
     bsoncxx::v1::stdx::optional<v1::hint> _hint;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _let;
@@ -89,8 +91,8 @@ delete_many_options::delete_many_options() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-delete_many_options& delete_many_options::collation(bsoncxx::v1::document::value collation) {
-    impl::with(this)->_collation = std::move(collation);
+delete_many_options& delete_many_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
     return *this;
 }
 
@@ -98,8 +100,17 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> delete_many_options::co
     return impl::with(this)->_collation;
 }
 
-delete_many_options& delete_many_options::write_concern(v1::write_concern wc) {
-    impl::with(this)->_write_concern = std::move(wc);
+delete_many_options& delete_many_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> delete_many_options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
+delete_many_options& delete_many_options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
     return *this;
 }
 
@@ -107,8 +118,8 @@ bsoncxx::v1::stdx::optional<v1::write_concern> delete_many_options::write_concer
     return impl::with(this)->_write_concern;
 }
 
-delete_many_options& delete_many_options::hint(v1::hint index_hint) {
-    impl::with(this)->_hint = std::move(index_hint);
+delete_many_options& delete_many_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
     return *this;
 }
 
@@ -116,8 +127,8 @@ bsoncxx::v1::stdx::optional<v1::hint> delete_many_options::hint() const {
     return impl::with(this)->_hint;
 }
 
-delete_many_options& delete_many_options::let(bsoncxx::v1::document::value let) {
-    impl::with(this)->_let = std::move(let);
+delete_many_options& delete_many_options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
     return *this;
 }
 
@@ -125,8 +136,8 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const delete_many_optio
     return impl::with(this)->_let;
 }
 
-delete_many_options& delete_many_options::comment(bsoncxx::v1::types::value comment) {
-    impl::with(this)->_comment = std::move(comment);
+delete_many_options& delete_many_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
     return *this;
 }
 
@@ -137,6 +148,11 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const delete_many_options:
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& delete_many_options::internal::collation(
     delete_many_options const& self) {
     return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> const& delete_many_options::internal::read_concern(
+    delete_many_options const& self) {
+    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern> const& delete_many_options::internal::write_concern(
@@ -161,6 +177,10 @@ bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& delete_many_option
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& delete_many_options::internal::collation(
     delete_many_options& self) {
     return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& delete_many_options::internal::read_concern(delete_many_options& self) {
+    return impl::with(self)._read_concern;
 }
 
 bsoncxx::v1::stdx::optional<v1::write_concern>& delete_many_options::internal::write_concern(

@@ -207,6 +207,11 @@ void append_to(v_noabi::options::bulk_write const& opts, scoped_bson& doc) {
         doc += scoped_bson{BCON_NEW("ordered", BCON_BOOL(false))};
     }
 
+    if (auto const& opt = opts.read_concern()) {
+        auto const v = opt->to_document();
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson_view(v).bson()))};
+    }
+
     if (auto const& opt = opts.write_concern()) {
         auto const v = opt->to_document();
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson_view(v).bson()))};
@@ -225,6 +230,10 @@ void append_to(v_noabi::options::bulk_write const& opts, scoped_bson& doc) {
 void append_to(v_noabi::options::count const& opts, scoped_bson& doc) {
     if (auto const& opt = opts.collation()) {
         doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(to_scoped_bson_view(*opt).bson()))};
+    }
+
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson_view(opt->to_document()).bson()))};
     }
 
     if (auto const& opt = opts.max_time()) {
@@ -259,6 +268,10 @@ void append_to(v_noabi::options::estimated_document_count const& opts, scoped_bs
 }
 
 void append_to(v_noabi::options::delete_options const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+    }
+
     if (auto const& opt = opts.write_concern()) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
     }
@@ -279,6 +292,10 @@ void append_to(v_noabi::options::distinct const& opts, scoped_bson& doc) {
 
     if (auto const& opt = opts.collation()) {
         doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(to_scoped_bson_view(*opt).bson()))};
+    }
+
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
     }
 
     if (auto const& opt = opts.comment()) {
@@ -386,6 +403,10 @@ void append_to(v_noabi::options::find const& opts, scoped_bson& doc) {
 }
 
 void append_to(v_noabi::options::insert const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+    }
+
     if (auto const& opt = opts.write_concern()) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
     }
@@ -396,6 +417,10 @@ void append_to(v_noabi::options::insert const& opts, scoped_bson& doc) {
 }
 
 void append_to(v_noabi::options::replace const& opts, scoped_bson& doc) {
+    if (auto const& opt = opts.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+    }
+
     if (auto const& opt = opts.write_concern()) {
         doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
     }
@@ -646,6 +671,10 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> find_and_mod
     // Some options must be passed via an `extra` BSON document.
     {
         scoped_bson extra;
+
+        if (auto const& opt = options.read_concern()) {
+            extra += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+        }
 
         if (auto const& opt = options.write_concern()) {
             if (!opt->is_acknowledged() && options.collation()) {
