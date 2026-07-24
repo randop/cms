@@ -68,7 +68,7 @@ jobs:
           echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' | sudo tee /etc/apt/apt.conf.d/keep-cache > /dev/null
 
       - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1
+        uses: hendrikmuhs/ccache-action@v1.2
         with:
           max-size: "2G"
           key: ${{ runner.os }}-ccache-${{ github.job }}-${{ hashFiles('meson.build', '**/CMakeLists.txt') }}
@@ -128,8 +128,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              owner: ${{ github.repository_owner }},
+              repo: ${{ github.repository }},
               workflow_id: 'deploy.yml',
               ref: 'master'
             })
