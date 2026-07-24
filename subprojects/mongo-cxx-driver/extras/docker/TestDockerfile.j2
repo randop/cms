@@ -1,0 +1,20 @@
+# Allow setting the "default" container image registry to use for image short names (e.g. to Amazon ECR).
+ARG DEFAULT_SEARCH_REGISTRY=docker.io
+
+FROM ${DEFAULT_SEARCH_REGISTRY}/mongodb/mongo-cxx-driver:{{ mongocxx_version }}-{{ distro }}
+
+WORKDIR /build
+
+RUN {{ install_test_dependencies }}
+
+COPY test.cpp /build/
+
+RUN g++ \
+    -o test \
+    test.cpp \
+    -I/usr/local/include/bsoncxx/v_noabi/ \
+    -I/usr/local/include/mongocxx/v_noabi/ \
+    -lmongocxx \
+    -lbsoncxx
+
+CMD /build/test
