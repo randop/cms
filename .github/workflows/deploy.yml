@@ -37,11 +37,11 @@ jobs:
       - name: Trigger release
         uses: actions/github-script@v8
         with:
-          github-token: ${{ secrets.GIT_HUB_WORKFLOW_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              owner: ${{ github.repository_owner }},
+              repo: ${{ github.repository }},
               workflow_id: 'release.yml',
               ref: 'master'
             })

@@ -33,27 +33,99 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-      - name: Update package manager
+
+      # === APT Cache ===
+      # NOTE: Bump the version to force refresh
+      - name: APT cache key
+        id: apt-key
+        run: |
+          echo "key=${{ runner.os }}-apt-toolchain-v2026-07" >> $GITHUB_OUTPUT
+
+      - name: Cache APT packages
+        uses: actions/cache@v4
+        id: cache-apt
+        with:
+          path: |
+            /var/cache/apt/archives
+            /var/lib/apt/lists
+            /var/cache/apt/pkgcache.bin
+            /var/cache/apt/srcpkgcache.bin
+          key: ${{ steps.apt-key.outputs.key }}
+          restore-keys: |
+            ${{ runner.os }}-apt-toolchain-
+
+      - name: Update package lists
         run: sudo DEBIAN_FRONTEND=noninteractive apt update -qqq -y
+
       - name: Install development toolchain
-        run: sudo DEBIAN_FRONTEND=noninteractive apt install -qqq -y -o Dpkg::Progress-Fancy=0 -o APT::Color=0 -o Dpkg::Use-Pty=0 git meson libboost-all-dev
+        run: |
+          sudo DEBIAN_FRONTEND=noninteractive apt install -qqq -y -o Dpkg::Progress-Fancy=0 -o APT::Color=0 -o Dpkg::Use-Pty=0 --no-install-recommends \
+            git meson libboost-all-dev ccache
+
+      # Keep downloaded packages for future runs
+      - name: Configure APT to keep downloaded packages
+        run: |
+          echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' | sudo tee /etc/apt/apt.conf.d/keep-cache > /dev/null
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          max-size: "2G"
+          key: ${{ runner.os }}-ccache-${{ github.job }}-${{ hashFiles('meson.build', '**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-${{ github.job }}-
+
+      - name: Cache mongo-c-driver
+        id: cache-mongoc
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/lib/libmongoc*
+            /usr/local/lib/libbson*
+            /usr/local/include/libmongoc*
+            /usr/local/include/bson*
+            ~/mongoc-build
+          key: ${{ runner.os }}-mongoc-${{ hashFiles('scripts/mongoc.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-mongoc-
+
       - name: Make script executable
         run: chmod +x scripts/mongoc.sh
+
       - name: Run mongo c driver compile script
         run: ./scripts/mongoc.sh
+
+      - name: Cache Meson build directory
+        id: cache-meson
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: ${{ runner.os }}-meson-build-${{ hashFiles('meson.build', 'subprojects/**') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-meson-build-${{ hashFiles('meson.build', 'subprojects/**') }}-
+            ${{ runner.os }}-meson-build-
+
       - name: Setup meson build
-        run: meson setup build --prefer-static --default-library=static
+        run: meson setup build --prefer-static --default-library=static --reconfigure
+
       - name: Compile CMS application
-        run: meson compile -C build
+        run: meson compile -C build -j $(nproc)
+
+      - name: ccache stats
+        run: ccache -s
 
   trigger-deploy:
     runs-on: ubuntu-latest
     needs: compile
+
+    # Only run if the 'compile' job was successful
+    if: success()
+
     steps:
       - name: Trigger deploy
         uses: actions/github-script@v8
         with:
-          github-token: ${{ secrets.GIT_HUB_WORKFLOW_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
