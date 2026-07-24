@@ -83,7 +83,8 @@ jobs:
             /usr/local/lib/libbson*
             /usr/local/include/libmongoc*
             /usr/local/include/bson*
-            /opt/mongo-c-driver/current/lib
+            /opt/mongo-c-driver/current
+            /etc/ld.so.conf.d/mongoc-driver.conf
             /usr/lib/pkgconfig/bson.pc
             /usr/lib/pkgconfig/bson-static.pc
             /usr/lib/pkgconfig/bson2.pc
@@ -91,9 +92,9 @@ jobs:
             /usr/lib/pkgconfig/mongoc.pc
             /usr/lib/pkgconfig/mongoc2.pc
             /usr/lib/pkgconfig/mongoc2-static.pc
-          key: ${{ runner.os }}-mongoc-${{ hashFiles('scripts/mongoc.sh') }}
+          key: ${{ runner.os }}-mongoc-driver-${{ hashFiles('scripts/mongoc.sh') }}
           restore-keys: |
-            ${{ runner.os }}-mongoc-
+            ${{ runner.os }}-mongoc-driver-
 
       - name: Make script executable
         run: chmod +x scripts/mongoc.sh
