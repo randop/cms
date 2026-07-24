@@ -41,7 +41,7 @@ jobs:
           echo "key=${{ runner.os }}-apt-toolchain-v2026-07" >> $GITHUB_OUTPUT
 
       - name: Cache APT packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         id: cache-apt
         with:
           path: |
@@ -76,7 +76,7 @@ jobs:
 
       - name: Cache mongo-c-driver
         id: cache-mongoc
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             /usr/local/lib/libmongoc*
@@ -104,7 +104,7 @@ jobs:
 
       - name: Cache Meson build directory
         id: cache-meson
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: build
           key: ${{ runner.os }}-meson-build-${{ hashFiles('meson.build', 'subprojects/**') }}-${{ github.sha }}
