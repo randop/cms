@@ -34,9 +34,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      # === APT Cache ===
       # NOTE: Bump the version to force refresh
-      - name: APT cache key
+      - name: APT cache
         id: apt-key
         run: |
           echo "key=${{ runner.os }}-apt-toolchain-v2026-07" >> $GITHUB_OUTPUT
@@ -84,7 +83,14 @@ jobs:
             /usr/local/lib/libbson*
             /usr/local/include/libmongoc*
             /usr/local/include/bson*
-            ~/mongoc-build
+            /opt/mongo-c-driver/current/lib
+            /usr/lib/pkgconfig/bson.pc
+            /usr/lib/pkgconfig/bson-static.pc
+            /usr/lib/pkgconfig/bson2.pc
+            /usr/lib/pkgconfig/bson2-static.pc
+            /usr/lib/pkgconfig/mongoc.pc
+            /usr/lib/pkgconfig/mongoc2.pc
+            /usr/lib/pkgconfig/mongoc2-static.pc
           key: ${{ runner.os }}-mongoc-${{ hashFiles('scripts/mongoc.sh') }}
           restore-keys: |
             ${{ runner.os }}-mongoc-
@@ -125,7 +131,7 @@ jobs:
       - name: Trigger deploy
         uses: actions/github-script@v8
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GIT_HUB_WORKFLOW_TOKEN }}
           script: |
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
