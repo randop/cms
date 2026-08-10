@@ -83,7 +83,7 @@ jobs:
             /usr/local/lib/libbson*
             /usr/local/include/libmongoc*
             /usr/local/include/bson*
-            /opt/mongo-c-driver/current
+            /opt/mongo-c-driver            
             /etc/ld.so.conf.d/mongoc-driver.conf
             /usr/lib/pkgconfig/bson.pc
             /usr/lib/pkgconfig/bson-static.pc

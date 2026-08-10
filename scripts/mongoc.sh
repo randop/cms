@@ -4,7 +4,8 @@
 # Refer at https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners
 
 export MONGODBCDRIVER_VERSION="2.4.0"
-if [ ! -d "/opt/mongo-c-driver/current" ]; then
+if [ ! -d "/opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}" ]; then  
+  sudo rm -rf /opt/mongo-c-driver/current
   sudo mkdir -p /opt/mongo-c-driver/current
   sudo git clone \
     -b ${MONGODBCDRIVER_VERSION} \
