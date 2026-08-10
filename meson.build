@@ -86,6 +86,7 @@ if not mongocxx_dep.found() or not bsoncxx_dep.found()
                                     'ENABLE_UNINSTALL' : 'OFF',
                                     'ENABLE_EXAMPLES' : 'OFF'
                                   })
+  mongocxx_opts.append_compile_args('cpp', '-Wno-deprecated-declarations')
   mongocxx = cmake.subproject(
     'mongo-cxx-driver',
     options : mongocxx_opts
