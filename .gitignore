@@ -162,3 +162,6 @@ cmake_install.cmake
 CTestTestfile.cmake
 compile_commands.json
 Makefile
+
+# meson
+subprojects/.wraplock

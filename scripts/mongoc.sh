@@ -3,8 +3,8 @@
 # IMPORTANT: Github ubuntu runner uses proprietary azure that has poor limitations and restrictions
 # Refer at https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners
 
-export MONGODBCDRIVER_VERSION="2.4.0"
-if [ ! -d "/opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}" ]; then  
+export MONGODBCDRIVER_VERSION="2.5.0"
+if [ ! -d "/opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}" ]; then
   sudo rm -rf /opt/mongo-c-driver/current
   sudo mkdir -p /opt/mongo-c-driver/current
   sudo git clone \
@@ -19,7 +19,7 @@ if [ ! -d "/opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}" ]; then
     -DENABLE_TESTS=OFF \
     -DENABLE_EXAMPLES=OFF
   sudo make install
-  sudo echo "/opt/mongo-c-driver/current/lib" > /etc/ld.so.conf.d/mongoc-driver.conf
+  sudo echo "/opt/mongo-c-driver/current/lib" >/etc/ld.so.conf.d/mongoc-driver.conf
   sudo ldconfig
   sudo rm -fv /usr/lib/pkgconfig/mongoc.pc /usr/lib/pkgconfig/bson.pc
   sudo rm -fv /usr/lib/pkgconfig/mongoc-static.pc /usr/lib/pkgconfig/bson-static.pc
