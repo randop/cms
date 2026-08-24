@@ -31,7 +31,7 @@ RUN echo "Patching OpenSSL regression..." && \
 RUN echo "Compiling mongoc-driver version ${MONGODBCDRIVER_VERSION} ..." && \
     cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && \
     cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=OFF -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current . && \
-    cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && make all install -n$(nproc) && \
+    cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && make -j$(nproc) all install && \
     echo "/opt/mongo-c-driver/current/lib" > /etc/ld.so.conf.d/mongoc-driver.conf && \
     ldconfig && \
     ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/mongoc.pc && \

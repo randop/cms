@@ -59,7 +59,7 @@ jobs:
       - name: Install development toolchain
         run: |
           sudo DEBIAN_FRONTEND=noninteractive apt install -qqq -y -o Dpkg::Progress-Fancy=0 -o APT::Color=0 -o Dpkg::Use-Pty=0 --no-install-recommends \
-            git meson libboost-all-dev ccache
+            git meson libboost-all-dev libzstd-dev ccache
 
       # Keep downloaded packages for future runs
       - name: Configure APT to keep downloaded packages
