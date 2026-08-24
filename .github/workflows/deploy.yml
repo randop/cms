@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and deploy image
-        run: docker buildx build --platform linux/amd64 -t rfledesma/blog:$(cat VERSION | xargs) -t rfledesma/blog:latest --push .
+        run: docker buildx build --platform linux/amd64 -t rfledesma/blog:$(cat VERSION | xargs) -t rfledesma/blog:latest -t rfledesma/cms:latest --push .
 
   trigger-release:
     runs-on: ubuntu-latest
