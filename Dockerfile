@@ -15,7 +15,7 @@ COPY . .
 RUN echo "Installing development packages..." && \
     DEBIAN_FRONTEND=noninteractive apt update -qqq && \
     DEBIAN_FRONTEND=noninteractive apt install -qqq -y -o Dpkg::Progress-Fancy=0 -o APT::Color=0 -o Dpkg::Use-Pty=0 --no-install-recommends \
-    git \
+    git libzstd-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN echo "Compiling mongodb c driver version ${MONGODBCDRIVER_VERSION} ..." && \
@@ -31,7 +31,7 @@ RUN echo "Patching OpenSSL regression..." && \
 RUN echo "Compiling mongoc-driver version ${MONGODBCDRIVER_VERSION} ..." && \
     cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && \
     cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=OFF -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current . && \
-    cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && make all install && \
+    cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION} && make all install -n$(nproc) && \
     echo "/opt/mongo-c-driver/current/lib" > /etc/ld.so.conf.d/mongoc-driver.conf && \
     ldconfig && \
     ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/mongoc.pc && \
