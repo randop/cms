@@ -3,7 +3,7 @@
 # IMPORTANT: Github ubuntu runner uses proprietary azure that has poor limitations and restrictions
 # Refer at https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners
 
-export MONGODBCDRIVER_VERSION="2.5.0"
+export MONGODBCDRIVER_VERSION="2.5.1"
 if [ ! -d "/opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}" ]; then
   sudo rm -rf /opt/mongo-c-driver/current
   sudo mkdir -p /opt/mongo-c-driver/current

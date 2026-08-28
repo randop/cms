@@ -29,24 +29,26 @@ Originated from [https://gitlab.com/randop/applications/](https://gitlab.com/ran
 ## Dependencies
 1. `libmongoc` and `libbson`
 ```bash
-export MONGODBCDRIVER_VERSION="2.5.0"
-sudo mkdir -p /opt/mongo-c-driver/current
-sudo git clone -b ${MONGODBCDRIVER_VERSION} --depth 1 https://github.com/mongodb/mongo-c-driver.git /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}
-sudo mkdir -p /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/build 
-sudo cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/build && cmake .. -DCMAKE_INSTALL_PREFIX=/opt/mongo-c-driver/current
-sudo cd /opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}/build && make install
-sudo echo "/opt/mongo-c-driver/current/lib" > /etc/ld.so.conf.d/mongoc-driver.conf
-sudo ldconfig
-sudo rm -fv /usr/lib/pkgconfig/mongoc.pc /usr/lib/pkgconfig/bson.pc
-sudo rm -fv /usr/lib/pkgconfig/mongoc-static.pc /usr/lib/pkgconfig/bson-static.pc
-sudo rm -fv /usr/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/bson2.pc
-sudo rm -fv /usr/lib/pkgconfig/mongoc2-static.pc /usr/lib/pkgconfig/bson2-static.pc
-sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/mongoc.pc
-sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2.pc /usr/lib/pkgconfig/mongoc2.pc
-sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/mongoc2-static.pc /usr/lib/pkgconfig/mongoc2-static.pc
-sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson.pc
-sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson2.pc
-sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson2-static.pc
+MONGODBCDRIVER_VERSION="2.5.1"
+MONGODBC_DIR=$HOME/opt/mongo-c-driver
+MONGODBCDRIVER_DIR=$MONGODBC_DIR/$MONGODBCDRIVER_VERSION
+mkdir -p $MONGODBC_DIR/current
+git clone -b ${MONGODBCDRIVER_VERSION} --depth 1 https://github.com/mongodb/mongo-c-driver.git $MONGODBCDRIVER_DIR
+mkdir -p $MONGODBCDRIVER_DIR/build 
+cd $MONGODBCDRIVER_DIR/build && cmake .. -DCMAKE_INSTALL_PREFIX=$MONGODBC_DIR/current
+cd $MONGODBCDRIVER_DIR/build && make install
+LOCAL_PKGLIB=$HOME/.local/lib/pkgconfig
+mkdir -pv $LOCAL_PKGLIB
+rm -fv $LOCAL_PKGLIB/mongoc.pc $LOCAL_PKGLIB/bson.pc
+rm -fv $LOCAL_PKGLIB/mongoc-static.pc $LOCAL_PKGLIB/bson-static.pc
+rm -fv $LOCAL_PKGLIB/mongoc2.pc $LOCAL_PKGLIB/bson2.pc
+rm -fv $LOCAL_PKGLIB/mongoc2-static.pc $LOCAL_PKGLIB/bson2-static.pc
+ln -sv $MONGODBC_DIR/current/lib/pkgconfig/mongoc2.pc $LOCAL_PKGLIB/mongoc.pc
+ln -sv $MONGODBC_DIR/current/lib/pkgconfig/mongoc2.pc $LOCAL_PKGLIB/mongoc2.pc
+ln -sv $MONGODBC_DIR/current/lib/pkgconfig/mongoc2-static.pc $LOCAL_PKGLIB/mongoc2-static.pc
+ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2.pc $LOCAL_PKGLIB/bson.pc
+ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2.pc $LOCAL_PKGLIB/bson2.pc
+ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2-static.pc $LOCAL_PKGLIB/bson2-static.pc
 ```
 
 ## Development
@@ -56,7 +58,9 @@ docker compose up --renew-anon-volumes
 ```
 2. Configure the Build
 ```bash
-export LD_LIBRARY_PATH=/usr/local/lib:/opt/boost/current/lib:/opt/mongo-c-driver/current/lib
+export LD_LIBRARY_PATH=/usr/local/lib:/opt/boost/current/lib:$HOME/opt/mongo-c-driver/current/lib
+export PKG_CONFIG_PATH="$HOME/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
+export CMAKE_PREFIX_PATH="$HOME/opt/mongo-c-driver/current/lib/cmake:$CMAKE_PREFIX_PATH"
 meson setup build --prefer-static --default-library=static
 ```
 3. Compile
@@ -72,4 +76,4 @@ docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/blog:latest 
 
 Copyright © 2010 — 2026 [Randolph Ledesma](https://github.com/randop).
 
-Last updated on 2026-08-22T08:43:34.000Z UTC
+Last updated on 2026-08-27T01:58:45.000Z UTC
