@@ -125,16 +125,6 @@ jobs:
       - name: Run mongo cpp driver compile script
         run: ./scripts/mongocpp.sh
 
-      - name: Cache Meson build directory
-        id: cache-meson
-        uses: actions/cache@v6
-        with:
-          path: build
-          key: ${{ runner.os }}-meson-build-${{ hashFiles('meson.build', 'subprojects/**') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-meson-build-${{ hashFiles('meson.build', 'subprojects/**') }}-
-            ${{ runner.os }}-meson-build-
-
       - name: Setup meson build
         run: PKG_CONFIG_PATH=/usr/lib/pkgconfig meson setup build --prefer-static --default-library=static --reconfigure
 
