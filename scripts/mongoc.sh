@@ -34,3 +34,5 @@ if [ ! -d "/opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}" ]; then
   sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson2.pc
   sudo ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson2-static.pc
 fi
+
+cat /usr/lib/pkgconfig/mongoc2-static.pc

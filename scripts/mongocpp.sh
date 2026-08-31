@@ -37,5 +37,6 @@ if [ ! -d $MONGODBCPP_VERSION_DIR ]; then
   sudo ln -sv "$MONGODBCPP_CURRENT/lib/pkgconfig/libbsoncxx1-static.pc" /usr/lib/pkgconfig/libbsoncxx1-static.pc
   sudo ln -sv "$MONGODBCPP_CURRENT/lib/pkgconfig/libmongocxx1-static.pc" /usr/lib/pkgconfig/libmongocxx1-static.pc
 
-  cat /usr/lib/pkgconfig/libmongocxx1-static.pc
 fi
+
+cat /usr/lib/pkgconfig/libmongocxx1-static.pc
