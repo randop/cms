@@ -126,7 +126,9 @@ jobs:
         run: ./scripts/mongocpp.sh
 
       - name: Setup meson build
-        run: PKG_CONFIG_PATH=/usr/lib/pkgconfig meson setup build --prefer-static --default-library=static --reconfigure
+        run: |
+          PKG_CONFIG_PATH=/usr/lib/pkgconfig:/opt/mongo-c-driver/current/lib/pkgconfig:/opt/mongo-cpp-driver/current/lib/pkgconfig \
+          meson setup build --prefer-static --default-library=static --reconfigure
 
       - name: Compile CMS application
         run: meson compile -C build -j $(nproc)
