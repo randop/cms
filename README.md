@@ -49,6 +49,35 @@ ln -sv $MONGODBC_DIR/current/lib/pkgconfig/mongoc2-static.pc $LOCAL_PKGLIB/mongo
 ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2.pc $LOCAL_PKGLIB/bson.pc
 ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2.pc $LOCAL_PKGLIB/bson2.pc
 ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2-static.pc $LOCAL_PKGLIB/bson2-static.pc
+
+MONGODBCPPDRIVER_VERSION="4.5.1"
+export CMAKE_PREFIX_PATH="$MONGODBC_DIR/current/lib/cmake:$CMAKE_PREFIX_PATH"
+MONGODBCPP_DIR="$HOME/opt/mongo-cpp-driver"
+MONGODBCPP_CURRENT="${MONGODBCPP_DIR}/current"
+MONGODBCPP_VERSION_DIR="${MONGODBCPP_DIR}/${MONGODBCPPDRIVER_VERSION}"
+MONGODBCPP_BUILD_DIR="${MONGODBCPP_DIR}/${MONGODBCPPDRIVER_VERSION}/build"
+rm -rf $MONGODBCPP_CURRENT
+mkdir -p $MONGODBCPP_CURRENT
+git clone \
+  -b "r${MONGODBCPPDRIVER_VERSION}" \
+  --depth 1 https://github.com/mongodb/mongo-cxx-driver.git ${MONGODBCPP_VERSION_DIR}
+
+echo 'set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "")' >"${MONGODBCPP_VERSION_DIR}/cmake/FetchMongoC.cmake"
+mkdir -p ${MONGODBCPP_BUILD_DIR}
+cd $MONGODBCPP_BUILD_DIR
+cmake .. -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=$MONGODBCPP_CURRENT \
+  -DENABLE_TESTS=OFF \
+  -DENABLE_EXAMPLES=OFF \
+  -DENABLE_UNINSTALL=OFF \
+  -DBUILD_SHARED_LIBS=OFF \
+  -DBUILD_SHARED_AND_STATIC_LIBS=OFF \
+  -DNEED_DOWNLOAD_C_DRIVER=OFF \
+  -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations"
+make -j$(nproc) && make install
+rm -fv $LOCAL_PKGLIB/libbsoncxx1-static.pc $LOCAL_PKGLIB/libmongocxx1-static.pc
+ln -sv "$MONGODBCPP_CURRENT/lib/pkgconfig/libbsoncxx1-static.pc" $LOCAL_PKGLIB/libbsoncxx1-static.pc
+ln -sv "$MONGODBCPP_CURRENT/lib/pkgconfig/libmongocxx1-static.pc" $LOCAL_PKGLIB/libmongocxx1-static.pc
 ```
 
 ## Development
@@ -58,9 +87,9 @@ docker compose up --renew-anon-volumes
 ```
 2. Configure the Build
 ```bash
-export LD_LIBRARY_PATH=/usr/local/lib:/opt/boost/current/lib:$HOME/opt/mongo-c-driver/current/lib
+export LD_LIBRARY_PATH=/usr/local/lib:/opt/boost/current/lib:$HOME/opt/mongo-c-driver/current/lib:$HOME/opt/mongo-cpp-driver/current/lib
 export PKG_CONFIG_PATH="$HOME/.local/lib/pkgconfig:$PKG_CONFIG_PATH"
-export CMAKE_PREFIX_PATH="$HOME/opt/mongo-c-driver/current/lib/cmake:$CMAKE_PREFIX_PATH"
+export CMAKE_PREFIX_PATH="$HOME/opt/mongo-c-driver/current/lib/cmake:$HOME/opt/mongo-cpp-driver/current/lib/cmake:$CMAKE_PREFIX_PATH"
 meson setup build --prefer-static --default-library=static
 ```
 3. Compile
@@ -71,9 +100,9 @@ meson compile -C build
 ## Build and Deploy
 ```bash
 docker buildx create --name multiarch --use
-docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/blog:latest --push .
+docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/cms:latest --push .
 ```
 
 Copyright © 2010 — 2026 [Randolph Ledesma](https://github.com/randop).
 
-Last updated on 2026-08-27T01:58:45.000Z UTC
+Last updated on 2026-08-31T01:44:09.000Z UTC

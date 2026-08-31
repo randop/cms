@@ -1,29 +1,29 @@
 project(
-  'cms',
-  'cpp',
-  version : run_command('cat', 'VERSION', check : true).stdout().strip(),
-  default_options : [
-    'default_library=static',
-    'buildtype=release',
-    'optimization=3',
-    'strip=true',
-    'b_lto=true',
-    'b_ndebug=true',
-    'cpp_std=c++20'
-  ],
-  meson_version : '>= 1.0.1',
+    'cms',
+    'cpp',
+    version: run_command('cat', 'VERSION', check: true).stdout().strip(),
+    default_options: [
+        'default_library=static',
+        'buildtype=release',
+        'optimization=3',
+        'strip=true',
+        'b_lto=true',
+        'b_ndebug=true',
+        'cpp_std=c++20',
+    ],
+    meson_version: '>= 1.0.1',
 )
 
 ###############################################################################
 # Versioning
 ###############################################################################
 version = meson.project_version()
-increment_script = run_command('sh', 'increment_build.sh', check : true)
-build_number = run_command('cat', 'build.number', check : true).stdout().strip()
+increment_script = run_command('sh', 'increment_build.sh', check: true)
+build_number = run_command('cat', 'build.number', check: true).stdout().strip()
 configure_file(
-  input : 'src/project.hpp.in',
-  output : 'project.hpp',
-  configuration : { 'VERSION' : version, 'BUILD' : build_number },
+    input: 'src/project.hpp.in',
+    output: 'project.hpp',
+    configuration: {'VERSION': version, 'BUILD': build_number},
 )
 
 ###############################################################################
@@ -35,65 +35,67 @@ cmake = import('cmake')
 
 cmark_opts = cmake.subproject_options()
 cmark_opts.set_override_option('b_lto', 'false')
-cmark_opts.append_compile_args('c', '-Wno-stringop-overflow')
-cmark_opts.add_cmake_defines({
-                               'CMAKE_C_FLAGS' : '-Wno-stringop-overflow'
-                             })
-cmark = cmake.subproject('cmark', options : cmark_opts)
+cmark_opts.append_compile_args(
+    'c',
+    '-Wno-stringop-overflow',
+    '-Wno-discarded-qualifiers',
+)
+cmark_opts.add_cmake_defines(
+    {'CMAKE_C_FLAGS': '-Wno-stringop-overflow -Wno-discarded-qualifiers'},
+)
+cmark = cmake.subproject('cmark', options: cmark_opts)
 cmark_dep = cmark.get_variable('cmark_dep')
 
 thread_dep = dependency('threads')
 
 boost_dep = dependency(
-  'boost',
-  version : '>=1.80.0',
-  modules : ['filesystem', 'thread', 'url', 'program_options'],
-  required : true,
-  static : true,
+    'boost',
+    version: '>=1.80.0',
+    modules: ['filesystem', 'thread', 'url', 'program_options'],
+    required: true,
+    static: true,
 )
 
-fmt_dep = dependency('fmt',
-                     default_options : ['default_library=static', 'header-only=true'],
-                     version : '>=12.0.0',
-                     fallback : ['fmt', 'fmt_header_only_dep'],
-                     required : true
+fmt_dep = dependency(
+    'fmt',
+    default_options: ['default_library=static', 'header-only=true'],
+    version: '>=12.0.0',
+    fallback: ['fmt', 'fmt_header_only_dep'],
+    required: true,
 )
 
 spdlog = subproject(
-  'spdlog',
-  default_options : ['default_library=static', 'compile_library=false'],
-  version : '>=1.17.0',
+    'spdlog',
+    default_options: ['default_library=static', 'compile_library=false'],
+    version: '>=1.17.0',
 )
 spdlog_dep = spdlog.get_variable('spdlog_dep')
 
-openssl_dep = dependency('openssl', required : true)
+openssl_dep = dependency('openssl', required: true)
 
-mongoc_dep = dependency('mongoc2-static', static : true, required : true, version : '>=2.5.1')
-bson_dep = dependency('bson2-static', static : true, required : true, version : '>=2.5.1')
+mongoc_dep = dependency(
+    'mongoc2-static',
+    static: true,
+    required: true,
+    version: '>=2.5.1',
+)
+bson_dep = dependency(
+    'bson2-static',
+    static: true,
+    required: true,
+    version: '>=2.5.1',
+)
 
-mongocxx_dep = dependency('mongocxx_static', version : '>=4.5.0', required : false, static : true)
-bsoncxx_dep = dependency('bsoncxx_static', version : '>=4.5.0', required : false, static : true)
-
-if not mongocxx_dep.found() or not bsoncxx_dep.found()
-  mongocxx_opts = cmake.subproject_options()
-  mongocxx_opts.add_cmake_defines({
-                                    'CMAKE_PREFIX_PATH' : '/opt/mongo-c-driver/current',
-                                    'BUILD_SHARED_LIBS' : 'OFF',
-                                    'BUILD_SHARED_AND_STATIC_LIBS' : 'OFF',
-                                    'NEED_DOWNLOAD_C_DRIVER' : false,
-                                    'CMAKE_BUILD_TYPE' : 'Release',
-                                    'ENABLE_TESTS' : 'OFF',
-                                    'ENABLE_UNINSTALL' : 'OFF',
-                                    'ENABLE_EXAMPLES' : 'OFF'
-                                  })
-  mongocxx_opts.append_compile_args('cpp', '-Wno-deprecated-declarations')
-  mongocxx = cmake.subproject(
-    'mongo-cxx-driver',
-    options : mongocxx_opts
-  )
-  mongocxx_dep = mongocxx.dependency('mongocxx_static')
-  bsoncxx_dep = mongocxx.dependency('bsoncxx_static')
-endif
+mongocxx_dep = dependency(
+    'libmongocxx1-static',
+    version: '>=4.5.1',
+    required: true,
+)
+bsoncxx_dep = dependency(
+    'libbsoncxx1-static',
+    version: '>=4.5.1',
+    required: false,
+)
 
 ###############################################################################
 # Includes
@@ -108,62 +110,58 @@ inc_dirs = [inc_src, inc_inc]
 cpp = meson.get_compiler('cpp')
 
 if get_option('build_environment') == 'container'
-  # Auto-detect architecture and choose appropriate -march
-  host_cpu = host_machine.cpu_family()
-  if host_cpu == 'x86_64'
-    add_project_arguments(
-      [
-        '-march=x86-64'
-      ],
-      language : 'cpp',
-    )
-  elif host_cpu == 'aarch64' or host_cpu == 'arm64'
-    add_project_arguments(
-      [
-        '-march=armv8-a'
-      ],
-      language : 'cpp',
-    )
-  else
-    # Fallback for other architectures (or you can error() here)
-    march_flag = '-march=native'
-  endif
+    # Auto-detect architecture and choose appropriate -march
+    host_cpu = host_machine.cpu_family()
+    if host_cpu == 'x86_64'
+        add_project_arguments(
+            ['-march=x86-64'],
+            language: 'cpp',
+        )
+    elif host_cpu == 'aarch64' or host_cpu == 'arm64'
+        add_project_arguments(
+            ['-march=armv8-a'],
+            language: 'cpp',
+        )
+    else
+        # Fallback for other architectures (or you can error() here)
+        march_flag = '-march=native'
+    endif
 
-  add_project_arguments(
-    [
-      '-mtune=generic',
-      '-ffast-math',
-      '-flto',
-    ],
-    language : 'cpp',
-  )
-  add_project_link_arguments(
-    [
-      '-flto',
-      '-Wl,--gc-sections',
-    ],
-    language : 'cpp',
-  )
-else
-  # Optimize for the host CPU
-  if cpp.get_id() == 'gcc' or cpp.get_id() == 'clang'
     add_project_arguments(
-      [
-        '-march=native',
-        '-mtune=native',
-        '-ffast-math',
-        '-flto',
-      ],
-      language : 'cpp',
+        [
+            '-mtune=generic',
+            '-ffast-math',
+            '-flto',
+        ],
+        language: 'cpp',
     )
     add_project_link_arguments(
-      [
-        '-flto',
-        '-Wl,--gc-sections',
-      ],
-      language : 'cpp',
+        [
+            '-flto',
+            '-Wl,--gc-sections',
+        ],
+        language: 'cpp',
     )
-  endif
+else
+    # Optimize for the host CPU
+    if cpp.get_id() == 'gcc' or cpp.get_id() == 'clang'
+        add_project_arguments(
+            [
+                '-march=native',
+                '-mtune=native',
+                '-ffast-math',
+                '-flto',
+            ],
+            language: 'cpp',
+        )
+        add_project_link_arguments(
+            [
+                '-flto',
+                '-Wl,--gc-sections',
+            ],
+            language: 'cpp',
+        )
+    endif
 endif
 
 ###############################################################################
@@ -173,21 +171,21 @@ endif
 sources = ['src/main.cpp']
 
 executable(
-  'cms',
-  sources,
-  dependencies : [
-    cmark_dep,
-    thread_dep,
-    boost_dep,
-    fmt_dep,
-    spdlog_dep,
-    openssl_dep,
-    mongocxx_dep,
-    bsoncxx_dep,
-    mongoc_dep,
-    bson_dep
-  ],
-  include_directories : inc_dirs,
-  cpp_args : ['-DBOOST_ALL_NO_LIB', '-DFMT_HEADER_ONLY'],
-  link_args : ['-Wl,--gc-sections', '-Wl,-O2'],
+    'cms',
+    sources,
+    dependencies: [
+        cmark_dep,
+        thread_dep,
+        boost_dep,
+        fmt_dep,
+        spdlog_dep,
+        openssl_dep,
+        mongocxx_dep,
+        bsoncxx_dep,
+        mongoc_dep,
+        bson_dep,
+    ],
+    include_directories: inc_dirs,
+    cpp_args: ['-DBOOST_ALL_NO_LIB', '-DFMT_HEADER_ONLY'],
+    link_args: ['-Wl,--gc-sections', '-Wl,-O2'],
 )

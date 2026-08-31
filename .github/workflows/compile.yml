@@ -83,7 +83,7 @@ jobs:
             /usr/local/lib/libbson*
             /usr/local/include/libmongoc*
             /usr/local/include/bson*
-            /opt/mongo-c-driver            
+            /opt/mongo-c-driver
             /etc/ld.so.conf.d/mongoc-driver.conf
             /usr/lib/pkgconfig/bson.pc
             /usr/lib/pkgconfig/bson-static.pc
@@ -96,11 +96,34 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mongoc-driver-
 
-      - name: Make script executable
+      - name: Cache mongo-cpp-driver
+        id: cache-mongocpp
+        uses: actions/cache@v6
+        with:
+          path: |
+            /usr/local/lib/libbsoncxx*
+            /usr/local/lib/libmongocxx*
+            /usr/local/include/bsoncxx
+            /usr/local/include/mongocxx
+            /opt/mongo-cpp-driver
+            /etc/ld.so.conf.d/mongocpp-driver.conf
+            /usr/lib/pkgconfig/libbsoncxx1-static.pc
+            /usr/lib/pkgconfig/libmongocxx1-static.pc
+          key: ${{ runner.os }}-mongocpp-driver-${{ hashFiles('scripts/mongocpp.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-mongocpp-driver-
+
+      - name: Make mongoc script executable
         run: chmod +x scripts/mongoc.sh
 
       - name: Run mongo c driver compile script
         run: ./scripts/mongoc.sh
+
+      - name: Make mongocpp script executable
+        run: chmod +x scripts/mongoc.sh
+
+      - name: Run mongo cpp driver compile script
+        run: ./scripts/mongocpp.sh
 
       - name: Cache Meson build directory
         id: cache-meson

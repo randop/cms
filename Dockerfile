@@ -3,10 +3,10 @@
 FROM rfledesma/boost:latest AS builder
 
 ARG MONGODBCDRIVER_VERSION=2.5.1
-ARG MONGODBCXXDRIVER_VERSION=4.5.0
+ARG MONGODBCPPDRIVER_VERSION=4.5.1
 
 ENV MONGODB_DRIVER_VERSION=$MONGODBCDRIVER_VERSION
-ENV MONGODBCXX_DRIVER_VERSION=$MONGODBCXXDRIVER_VERSION
+ENV MONGODBCPP_DRIVER_VERSION=$MONGODBCPPDRIVER_VERSION
 
 WORKDIR /app
 COPY . .
@@ -41,12 +41,33 @@ RUN echo "Compiling mongoc-driver version ${MONGODBCDRIVER_VERSION} ..." && \
     ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson2.pc && \
     ln -sv /opt/mongo-c-driver/current/lib/pkgconfig/bson2-static.pc /usr/lib/pkgconfig/bson2-static.pc
 
-ENV LD_LIBRARY_PATH=/usr/local/lib:/opt/mongo-c-driver/current/lib
+RUN echo "Compiling mongodb c++ driver version ${MONGODBCPPDRIVER_VERSION} ..." && \
+    mkdir -p /opt/mongo-cpp-driver/current && \
+    git clone -b "r${MONGODBCPPDRIVER_VERSION}" --depth 1 https://github.com/mongodb/mongo-cxx-driver.git /opt/mongo-cpp-driver/${MONGODBCPPDRIVER_VERSION}
 
 RUN echo "Patching mongocxx-driver build..." && \
-    mkdir -p /app/subprojects/mongo-cxx-driver/build && \
-    echo "${MONGODBCXXDRIVER_VERSION}" > /app/subprojects/mongo-cxx-driver/build/VERSION_CURRENT && \
-    echo "${MONGODBCXXDRIVER_VERSION}" > /app/subprojects/mongo-cxx-driver/VERSION_CURRENT
+    echo 'set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "")' >"/opt/mongo-cpp-driver/${MONGODBCPPDRIVER_VERSION}/cmake/FetchMongoC.cmake"
+
+ENV CMAKE_PREFIX_PATH=/opt/mongo-c-driver/current/lib/cmake
+
+RUN echo "Compiling mongocpp-driver version ${MONGODBCPPDRIVER_VERSION} ..." && \
+    cd /opt/mongo-cpp-driver/${MONGODBCPPDRIVER_VERSION} && \
+    cmake . -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cpp-driver/current \
+    -DENABLE_TESTS=OFF \
+    -DENABLE_EXAMPLES=OFF \
+    -DENABLE_UNINSTALL=OFF \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DBUILD_SHARED_AND_STATIC_LIBS=OFF \
+    -DNEED_DOWNLOAD_C_DRIVER=OFF \
+    -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations" && \
+    cd /opt/mongo-cpp-driver/${MONGODBCPPDRIVER_VERSION} && make -j$(nproc) install && \
+    echo "/opt/mongocpp-driver/current/lib" > /etc/ld.so.conf.d/mongocpp-driver.conf && \
+    ldconfig && \
+    ln -sv /opt/mongo-cpp-driver/current/lib/pkgconfig/libbsoncxx1-static.pc /usr/lib/pkgconfig/libbsoncxx1-static.pc && \
+    ln -sv /opt/mongo-cpp-driver/current/lib/pkgconfig/libmongocxx1-static.pc /usr/lib/pkgconfig/libmongocxx1-static.pc
+
+ENV LD_LIBRARY_PATH=/usr/local/lib:/opt/mongo-c-driver/current/lib:/opt/mongo-cpp-driver/current/lib
 
 RUN echo "Configuring build..." && \
     meson setup build --prefer-static --default-library=static -Dbuild_environment=container
@@ -56,6 +77,7 @@ RUN echo "Compiling application..." && \
 
 RUN echo "Cleaning up..." && \
     rm -rf /opt/mongo-c-driver && \
+    rm -rf /opt/mongo-cpp-driver && \
     rm -rf /opt/boost*
 
 # Runtime stage: distroless debian
