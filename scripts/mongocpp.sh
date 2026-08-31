@@ -31,7 +31,7 @@ if [ ! -d $MONGODBCPP_VERSION_DIR ]; then
     -DNEED_DOWNLOAD_C_DRIVER=OFF \
     -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations"
   sudo make -j$(nproc) && make install
-  sudo echo "$MONGODBCPP_CURRENT/lib" >/etc/ld.so.conf.d/mongocpp-driver.conf
+  sudo echo "/opt/mongo-cpp-driver/lib" >/etc/ld.so.conf.d/mongocpp-driver.conf
   sudo ldconfig
   sudo rm -fv /usr/lib/pkgconfig/libbsoncxx1-static.pc /usr/lib/pkgconfig/libmongocxx1-static.pc
   sudo ln -sv "$MONGODBCPP_CURRENT/lib/pkgconfig/libbsoncxx1-static.pc" /usr/lib/pkgconfig/libbsoncxx1-static.pc
