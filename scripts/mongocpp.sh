@@ -21,6 +21,7 @@ if [ ! -d $MONGODBCPP_VERSION_DIR ]; then
   sudo mkdir -p ${MONGODBCPP_BUILD_DIR}
   cd $MONGODBCPP_BUILD_DIR
   sudo cmake .. -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver/current/lib/cmake \
     -DCMAKE_INSTALL_PREFIX=$MONGODBCPP_CURRENT \
     -DENABLE_TESTS=OFF \
     -DENABLE_EXAMPLES=OFF \
