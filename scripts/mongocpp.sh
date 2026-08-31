@@ -3,7 +3,7 @@
 set -euo pipefail
 
 export MONGODBCPPDRIVER_VERSION="4.5.1"
-export CMAKE_PREFIX_PATH="/opt/mongo-c-driver/current/lib/cmake:$CMAKE_PREFIX_PATH"
+export CMAKE_PREFIX_PATH="/opt/mongo-c-driver/current/lib/cmake"
 MONGODBCPP_DIR="/opt/mongo-cpp-driver"
 MONGODBCPP_CURRENT="${MONGODBCPP_DIR}/current"
 MONGODBCPP_VERSION_DIR="${MONGODBCPP_DIR}/${MONGODBCPPDRIVER_VERSION}"
