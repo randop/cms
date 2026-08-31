@@ -21,7 +21,7 @@ if [ ! -d "/opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}" ]; then
     -DENABLE_TESTS=OFF \
     -DENABLE_EXAMPLES=OFF
   sudo make -j$(nproc) && make install
-  sudo echo "/opt/mongo-c-driver/current/lib" >/etc/ld.so.conf.d/mongoc-driver.conf
+  sudo echo "/opt/mongo-c-driver/current/lib" | sudo tee /etc/ld.so.conf.d/mongoc-driver.conf
   sudo ldconfig
   sudo rm -fv /usr/lib/pkgconfig/mongoc.pc /usr/lib/pkgconfig/bson.pc
   sudo rm -fv /usr/lib/pkgconfig/mongoc-static.pc /usr/lib/pkgconfig/bson-static.pc
