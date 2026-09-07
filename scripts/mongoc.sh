@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-export MONGODBCDRIVER_VERSION="2.5.1"
+export MONGODBCDRIVER_VERSION="2.5.2"
 if [ ! -d "/opt/mongo-c-driver/${MONGODBCDRIVER_VERSION}" ]; then
   sudo rm -rf /opt/mongo-c-driver/current
   sudo mkdir -p /opt/mongo-c-driver/current
