@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-export MONGODBCDRIVER_VERSION="2.5.1"
-export MONGODBCPPDRIVER_VERSION="4.5.1"
+export MONGODBCDRIVER_VERSION="2.5.2"
+export MONGODBCPPDRIVER_VERSION="4.5.2"
 export PKG_CONFIG_PATH="/opt/mongo-c-driver/current/lib/pkgconfig"
 export CMAKE_PREFIX_PATH="/opt/mongo-c-driver/current/lib/cmake:/opt/mongo-c-driver/current/lib/cmake/bson-${MONGODBCDRIVER_VERSION}:/opt/mongo-c-driver/current/lib/cmake/mongoc-${MONGODBCDRIVER_VERSION}"
 

@@ -88,12 +88,12 @@ bson_dep = dependency(
 
 mongocxx_dep = dependency(
     'libmongocxx1-static',
-    version: '>=4.5.1',
+    version: '>=4.5.2',
     required: true,
 )
 bsoncxx_dep = dependency(
     'libbsoncxx1-static',
-    version: '>=4.5.1',
+    version: '>=4.5.2',
     required: false,
 )
 
