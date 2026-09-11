@@ -29,7 +29,7 @@ Originated from [https://gitlab.com/randop/applications/](https://gitlab.com/ran
 ## Dependencies
 1. `libmongoc` and `libbson`
 ```bash
-MONGODBCDRIVER_VERSION="2.5.2"
+MONGODBCDRIVER_VERSION="2.5.3"
 MONGODBC_DIR=$HOME/opt/mongo-c-driver
 MONGODBCDRIVER_DIR=$MONGODBC_DIR/$MONGODBCDRIVER_VERSION
 mkdir -p $MONGODBC_DIR/current
@@ -50,7 +50,7 @@ ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2.pc $LOCAL_PKGLIB/bson.pc
 ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2.pc $LOCAL_PKGLIB/bson2.pc
 ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2-static.pc $LOCAL_PKGLIB/bson2-static.pc
 
-MONGODBCPPDRIVER_VERSION="4.5.1"
+MONGODBCPPDRIVER_VERSION="4.5.2"
 export CMAKE_PREFIX_PATH="$MONGODBC_DIR/current/lib/cmake:$CMAKE_PREFIX_PATH"
 MONGODBCPP_DIR="$HOME/opt/mongo-cpp-driver"
 MONGODBCPP_CURRENT="${MONGODBCPP_DIR}/current"
@@ -105,4 +105,4 @@ docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/cms:latest -
 
 Copyright © 2010 — 2026 [Randolph Ledesma](https://github.com/randop).
 
-Last updated on 2026-09-07T05:18:47.000Z UTC
+Last updated on 2026-09-11T02:16:44.000Z UTC
