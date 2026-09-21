@@ -29,7 +29,7 @@ Originated from [https://gitlab.com/randop/applications/](https://gitlab.com/ran
 ## Dependencies
 1. `libmongoc` and `libbson`
 ```bash
-MONGODBCDRIVER_VERSION="2.5.3"
+MONGODBCDRIVER_VERSION="2.5.4"
 MONGODBC_DIR=$HOME/opt/mongo-c-driver
 MONGODBCDRIVER_DIR=$MONGODBC_DIR/$MONGODBCDRIVER_VERSION
 mkdir -p $MONGODBC_DIR/current
@@ -105,4 +105,4 @@ docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/cms:latest -
 
 Copyright © 2010 — 2026 [Randolph Ledesma](https://github.com/randop).
 
-Last updated on 2026-09-16T13:09:06.000Z UTC
+Last updated on 2026-09-21T04:01:27.000Z UTC

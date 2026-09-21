@@ -77,13 +77,13 @@ mongoc_dep = dependency(
     'mongoc2-static',
     static: true,
     required: true,
-    version: '>=2.5.3',
+    version: '>=2.5.4',
 )
 bson_dep = dependency(
     'bson2-static',
     static: true,
     required: true,
-    version: '>=2.5.3',
+    version: '>=2.5.4',
 )
 
 mongocxx_dep = dependency(
