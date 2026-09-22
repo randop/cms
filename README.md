@@ -50,7 +50,7 @@ ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2.pc $LOCAL_PKGLIB/bson.pc
 ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2.pc $LOCAL_PKGLIB/bson2.pc
 ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2-static.pc $LOCAL_PKGLIB/bson2-static.pc
 
-MONGODBCPPDRIVER_VERSION="4.5.3"
+MONGODBCPPDRIVER_VERSION="4.6.0"
 export CMAKE_PREFIX_PATH="$MONGODBC_DIR/current/lib/cmake:$CMAKE_PREFIX_PATH"
 MONGODBCPP_DIR="$HOME/opt/mongo-cpp-driver"
 MONGODBCPP_CURRENT="${MONGODBCPP_DIR}/current"
@@ -105,4 +105,4 @@ docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/cms:latest -
 
 Copyright © 2010 — 2026 [Randolph Ledesma](https://github.com/randop).
 
-Last updated on 2026-09-21T04:01:27.000Z UTC
+Last updated on 2026-09-22T16:25:40.000Z UTC
