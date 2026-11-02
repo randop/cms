@@ -39,7 +39,7 @@ jobs:
       - name: APT cache
         id: apt-key
         run: |
-          echo "key=${{ runner.os }}-apt-toolchain-v2026-07" >> $GITHUB_OUTPUT
+          echo "key=${{ runner.os }}-apt-toolchain-v2026-11" >> $GITHUB_OUTPUT
 
       - name: Cache APT packages
         uses: actions/cache@v6
@@ -61,7 +61,7 @@ jobs:
       - name: Install development toolchain
         run: |
           sudo DEBIAN_FRONTEND=noninteractive apt install -qqq -y -o Dpkg::Progress-Fancy=0 -o APT::Color=0 -o Dpkg::Use-Pty=0 --no-install-recommends \
-            git meson libboost-all-dev libzstd-dev ccache
+            git meson libboost-all-dev libzstd-dev ccache libssl-dev libjitterentropy3-dev
 
       # Keep downloaded packages for future runs
       - name: Configure APT to keep downloaded packages
@@ -122,7 +122,7 @@ jobs:
         run: ./scripts/mongoc.sh
 
       - name: Make mongocpp script executable
-        run: chmod +x scripts/mongoc.sh
+        run: chmod +x scripts/mongocpp.sh
 
       - name: Run mongo cpp driver compile script
         run: ./scripts/mongocpp.sh
