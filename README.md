@@ -50,7 +50,7 @@ ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2.pc $LOCAL_PKGLIB/bson.pc
 ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2.pc $LOCAL_PKGLIB/bson2.pc
 ln -sv $MONGODBC_DIR/current/lib/pkgconfig/bson2-static.pc $LOCAL_PKGLIB/bson2-static.pc
 
-MONGODBCPPDRIVER_VERSION="4.6.1"
+MONGODBCPPDRIVER_VERSION="4.6.2"
 export CMAKE_PREFIX_PATH="$MONGODBC_DIR/current/lib/cmake:$CMAKE_PREFIX_PATH"
 MONGODBCPP_DIR="$HOME/opt/mongo-cpp-driver"
 MONGODBCPP_CURRENT="${MONGODBCPP_DIR}/current"
