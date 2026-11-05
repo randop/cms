@@ -7,6 +7,7 @@ Content management server project written in C++ with MongoDB
   <a href="https://github.com/randop/cms">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" target="_blank" />
   </a>
+  <img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white" />
 </p>
 
 >  Copyright © 2010 — 2026 Randolph Ledesma
@@ -105,4 +106,4 @@ docker buildx build --platform linux/amd64,linux/arm64 -t rfledesma/cms:latest -
 
 Copyright © 2010 — 2026 [Randolph Ledesma](https://github.com/randop).
 
-Last updated on 2026-11-04T07:26:30.000Z UTC
+Last updated on 2026-11-05T06:22:07.000Z UTC
